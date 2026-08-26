@@ -37,6 +37,7 @@ export default function AdminDashboard() {
   // Drag and drop state
   const [isDragging, setIsDragging] = useState(false);
   const [uploadProgress, setUploadProgress] = useState<number | null>(null);
+  const [isUploadingImage, setIsUploadingImage] = useState(false);
 
   // Modal / Form States for CRUD
   const [editingItem, setEditingItem] = useState<{ type: string; data: any } | null>(null);
@@ -63,6 +64,41 @@ export default function AdminDashboard() {
     }
     return headers;
   }, [authToken]);
+
+  // Handle Image Upload for Projects, Courses, and Services
+  const handleImageUpload = async (file: File, callback: (url: string) => void) => {
+    if (!file) return;
+    const formData = new FormData();
+    formData.append('file', file);
+    formData.append('folder', 'portfolio_uploads');
+    setIsUploadingImage(true);
+    try {
+      const res = await api.post('/upload/single', formData, {
+        headers: {
+          ...getHeaders(),
+          'Content-Type': 'multipart/form-data'
+        }
+      });
+      if (res.data?.data?.secureUrl) {
+        callback(res.data.data.secureUrl);
+        toast.success('Photo Uploaded to Cloudinary ✦');
+      } else {
+        throw new Error('No secure URL returned');
+      }
+    } catch (err: any) {
+      // Fallback: Read file as Data URL locally for instant preview and state update
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        if (e.target?.result) {
+          callback(e.target.result as string);
+          toast.success('Photo Selected ✦');
+        }
+      };
+      reader.readAsDataURL(file);
+    } finally {
+      setIsUploadingImage(false);
+    }
+  };
 
   // ==========================================
   // QUERIES FOR ALL DYNAMIC SECTIONS
@@ -586,7 +622,7 @@ export default function AdminDashboard() {
                     onClick={() => {
                       setEditingItem({
                         type: 'project',
-                        data: { title: '', subtitle: '', category: 'AI_SYSTEM', description: '', techStack: [], liveUrl: '', clientUrl: '', serverUrl: '', githubUrl: '', image: '', featured: true }
+                        data: { title: '', subtitle: '', category: 'AI_SYSTEM', description: '', techStack: [], liveUrl: '', clientUrl: '', serverUrl: '', githubUrl: '', imageUrl: '', featured: true }
                       });
                       setIsModalOpen(true);
                     }}
@@ -601,7 +637,7 @@ export default function AdminDashboard() {
                     onClick={() => {
                       setEditingItem({
                         type: 'course',
-                        data: { title: '', slug: '', platform: 'Udemy Masterclass', rating: 4.9, studentsCount: 1500, courseUrl: '', description: '', topics: [], bannerUrl: '', image: '' }
+                        data: { title: '', slug: '', platform: 'Udemy Masterclass', rating: 4.9, studentsCount: 1500, courseUrl: '', description: '', topics: [], bannerUrl: '' }
                       });
                       setIsModalOpen(true);
                     }}
@@ -616,7 +652,7 @@ export default function AdminDashboard() {
                     onClick={() => {
                       setEditingItem({
                         type: 'service',
-                        data: { number: `0${services.length + 1}`, category: '', title: '', tags: [], overview: '' }
+                        data: { number: `0${services.length + 1}`, category: '', title: '', tags: [], overview: '', imageUrl: '' }
                       });
                       setIsModalOpen(true);
                     }}
@@ -680,7 +716,7 @@ export default function AdminDashboard() {
                   <div className="tab-header-row">
                     <div>
                       <h2 className="tab-title">Services &amp; Specialization Manager</h2>
-                      <p className="tab-desc">Add, update, or remove service offerings displayed in the accordion section.</p>
+                      <p className="tab-desc">Add, update, or remove service offerings with custom photos and tech stacks.</p>
                     </div>
                   </div>
 
@@ -688,9 +724,16 @@ export default function AdminDashboard() {
                     {services.map((item: any) => (
                       <div className="admin-glass-card" key={item.id}>
                         <div className="admin-card-header">
-                          <div className="admin-card-title-group">
-                            <span className="admin-card-badge">{item.number || '01'} • {item.category}</span>
-                            <h3 className="admin-card-title">{item.title}</h3>
+                          <div style={{ display: 'flex', gap: '14px', alignItems: 'center' }}>
+                            {item.imageUrl && (
+                              <div className="admin-card-thumb-box">
+                                <img src={item.imageUrl} alt={item.title} className="admin-card-thumb" />
+                              </div>
+                            )}
+                            <div className="admin-card-title-group">
+                              <span className="admin-card-badge">{item.number || '01'} • {item.category}</span>
+                              <h3 className="admin-card-title">{item.title}</h3>
+                            </div>
                           </div>
 
                           <div className="admin-card-actions">
@@ -745,7 +788,7 @@ export default function AdminDashboard() {
                   <div className="tab-header-row">
                     <div>
                       <h2 className="tab-title">Udemy &amp; Developed Courses Manager</h2>
-                      <p className="tab-desc">Manage published masterclasses, student ratings, and topic tags.</p>
+                      <p className="tab-desc">Manage published masterclasses, banner artwork, student ratings, and topic tags.</p>
                     </div>
                   </div>
 
@@ -753,9 +796,16 @@ export default function AdminDashboard() {
                     {courses.map((c: any) => (
                       <div className="admin-glass-card" key={c.id}>
                         <div className="admin-card-header">
-                          <div className="admin-card-title-group">
-                            <span className="admin-card-badge">{c.platform || 'Udemy'} • ★ {c.rating || 4.8} ({c.studentsCount || 1200}+ Students)</span>
-                            <h3 className="admin-card-title">{c.title}</h3>
+                          <div style={{ display: 'flex', gap: '14px', alignItems: 'center' }}>
+                            {(c.bannerUrl || c.image) && (
+                              <div className="admin-card-thumb-box">
+                                <img src={c.bannerUrl || c.image} alt={c.title} className="admin-card-thumb" />
+                              </div>
+                            )}
+                            <div className="admin-card-title-group">
+                              <span className="admin-card-badge">{c.platform || 'Udemy'} • ★ {c.rating || 4.8} ({c.studentsCount || 1200}+ Students)</span>
+                              <h3 className="admin-card-title">{c.title}</h3>
+                            </div>
                           </div>
 
                           <div className="admin-card-actions">
@@ -981,7 +1031,7 @@ export default function AdminDashboard() {
                   <div className="tab-header-row">
                     <div>
                       <h2 className="tab-title">Selected Projects Portfolio Manager</h2>
-                      <p className="tab-desc">Add or update featured web apps, AI systems, and machine learning models.</p>
+                      <p className="tab-desc">Add or update featured web apps, preview screenshots, AI systems, and machine learning models.</p>
                     </div>
                   </div>
 
@@ -989,9 +1039,16 @@ export default function AdminDashboard() {
                     {projects.map((proj: any) => (
                       <div className="admin-glass-card" key={proj.id}>
                         <div className="admin-card-header">
-                          <div className="admin-card-title-group">
-                            <span className="admin-card-badge">{proj.category || 'Web App'}</span>
-                            <h3 className="admin-card-title">{proj.title}</h3>
+                          <div style={{ display: 'flex', gap: '14px', alignItems: 'center' }}>
+                            {(proj.imageUrl || proj.image) && (
+                              <div className="admin-card-thumb-box">
+                                <img src={proj.imageUrl || proj.image} alt={proj.title} className="admin-card-thumb" />
+                              </div>
+                            )}
+                            <div className="admin-card-title-group">
+                              <span className="admin-card-badge">{proj.category || 'Web App'}</span>
+                              <h3 className="admin-card-title">{proj.title}</h3>
+                            </div>
                           </div>
 
                           <div className="admin-card-actions">
@@ -1317,6 +1374,59 @@ export default function AdminDashboard() {
                       required
                     />
                   </div>
+
+                  {/* Photo Upload & Preview for Service */}
+                  <div className="admin-field-group">
+                    <label className="admin-field-label">SERVICE ICON / COVER PHOTO</label>
+                    <div className="admin-photo-uploader">
+                      {editingItem.data.imageUrl ? (
+                        <div className="photo-preview-wrap">
+                          <img src={editingItem.data.imageUrl} alt="Service Preview" className="photo-preview-thumb" />
+                          <button
+                            type="button"
+                            className="photo-remove-btn"
+                            onClick={() => setEditingItem({ ...editingItem, data: { ...editingItem.data, imageUrl: '' } })}
+                          >
+                            ✕ Remove Photo
+                          </button>
+                        </div>
+                      ) : (
+                        <div className="photo-upload-dropzone">
+                          <input
+                            type="file"
+                            accept="image/*"
+                            id="service-photo-input"
+                            style={{ display: 'none' }}
+                            onChange={(e) => {
+                              if (e.target.files?.[0]) {
+                                handleImageUpload(e.target.files[0], (url) => {
+                                  setEditingItem({ ...editingItem, data: { ...editingItem.data, imageUrl: url } });
+                                });
+                              }
+                            }}
+                          />
+                          <label htmlFor="service-photo-input" className="photo-upload-btn">
+                            <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" strokeWidth="2">
+                              <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+                              <circle cx="8.5" cy="8.5" r="1.5"></circle>
+                              <polyline points="21 15 16 10 5 21"></polyline>
+                            </svg>
+                            <span>{isUploadingImage ? 'Uploading Photo...' : 'Upload Service Image (JPG, PNG, WebP)'}</span>
+                          </label>
+                        </div>
+                      )}
+                      <div style={{ marginTop: '8px' }}>
+                        <input
+                          type="text"
+                          className="admin-form-input"
+                          placeholder="Or paste Direct Image URL (https://...)"
+                          value={editingItem.data.imageUrl || ''}
+                          onChange={(e) => setEditingItem({ ...editingItem, data: { ...editingItem.data, imageUrl: e.target.value } })}
+                        />
+                      </div>
+                    </div>
+                  </div>
+
                   <div className="admin-field-group">
                     <label className="admin-field-label">OVERVIEW / DESCRIPTION</label>
                     <textarea
@@ -1352,6 +1462,59 @@ export default function AdminDashboard() {
                       required
                     />
                   </div>
+
+                  {/* Photo Upload & Preview for Course Banner */}
+                  <div className="admin-field-group">
+                    <label className="admin-field-label">COURSE BANNER / COVER ARTWORK</label>
+                    <div className="admin-photo-uploader">
+                      {editingItem.data.bannerUrl || editingItem.data.image ? (
+                        <div className="photo-preview-wrap">
+                          <img src={editingItem.data.bannerUrl || editingItem.data.image} alt="Course Preview" className="photo-preview-thumb" />
+                          <button
+                            type="button"
+                            className="photo-remove-btn"
+                            onClick={() => setEditingItem({ ...editingItem, data: { ...editingItem.data, bannerUrl: '', image: '' } })}
+                          >
+                            ✕ Remove Banner
+                          </button>
+                        </div>
+                      ) : (
+                        <div className="photo-upload-dropzone">
+                          <input
+                            type="file"
+                            accept="image/*"
+                            id="course-photo-input"
+                            style={{ display: 'none' }}
+                            onChange={(e) => {
+                              if (e.target.files?.[0]) {
+                                handleImageUpload(e.target.files[0], (url) => {
+                                  setEditingItem({ ...editingItem, data: { ...editingItem.data, bannerUrl: url, image: url } });
+                                });
+                              }
+                            }}
+                          />
+                          <label htmlFor="course-photo-input" className="photo-upload-btn">
+                            <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" strokeWidth="2">
+                              <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+                              <circle cx="8.5" cy="8.5" r="1.5"></circle>
+                              <polyline points="21 15 16 10 5 21"></polyline>
+                            </svg>
+                            <span>{isUploadingImage ? 'Uploading Banner...' : 'Upload Course Banner Artwork (JPG, PNG, WebP)'}</span>
+                          </label>
+                        </div>
+                      )}
+                      <div style={{ marginTop: '8px' }}>
+                        <input
+                          type="text"
+                          className="admin-form-input"
+                          placeholder="Or paste Direct Image URL (https://...)"
+                          value={editingItem.data.bannerUrl || editingItem.data.image || ''}
+                          onChange={(e) => setEditingItem({ ...editingItem, data: { ...editingItem.data, bannerUrl: e.target.value, image: e.target.value } })}
+                        />
+                      </div>
+                    </div>
+                  </div>
+
                   <div className="form-row">
                     <div className="admin-field-group">
                       <label className="admin-field-label">PLATFORM</label>
@@ -1581,6 +1744,59 @@ export default function AdminDashboard() {
                       required
                     />
                   </div>
+
+                  {/* Photo Upload & Preview for Project */}
+                  <div className="admin-field-group">
+                    <label className="admin-field-label">PROJECT COVER SCREENSHOT / THUMBNAIL</label>
+                    <div className="admin-photo-uploader">
+                      {editingItem.data.imageUrl || editingItem.data.image ? (
+                        <div className="photo-preview-wrap">
+                          <img src={editingItem.data.imageUrl || editingItem.data.image} alt="Project Preview" className="photo-preview-thumb" />
+                          <button
+                            type="button"
+                            className="photo-remove-btn"
+                            onClick={() => setEditingItem({ ...editingItem, data: { ...editingItem.data, imageUrl: '', image: '' } })}
+                          >
+                            ✕ Remove Photo
+                          </button>
+                        </div>
+                      ) : (
+                        <div className="photo-upload-dropzone">
+                          <input
+                            type="file"
+                            accept="image/*"
+                            id="project-photo-input"
+                            style={{ display: 'none' }}
+                            onChange={(e) => {
+                              if (e.target.files?.[0]) {
+                                handleImageUpload(e.target.files[0], (url) => {
+                                  setEditingItem({ ...editingItem, data: { ...editingItem.data, imageUrl: url, image: url } });
+                                });
+                              }
+                            }}
+                          />
+                          <label htmlFor="project-photo-input" className="photo-upload-btn">
+                            <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" strokeWidth="2">
+                              <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+                              <circle cx="8.5" cy="8.5" r="1.5"></circle>
+                              <polyline points="21 15 16 10 5 21"></polyline>
+                            </svg>
+                            <span>{isUploadingImage ? 'Uploading Screenshot...' : 'Upload Project Screenshot (JPG, PNG, WebP)'}</span>
+                          </label>
+                        </div>
+                      )}
+                      <div style={{ marginTop: '8px' }}>
+                        <input
+                          type="text"
+                          className="admin-form-input"
+                          placeholder="Or paste Direct Image URL (https://...)"
+                          value={editingItem.data.imageUrl || editingItem.data.image || ''}
+                          onChange={(e) => setEditingItem({ ...editingItem, data: { ...editingItem.data, imageUrl: e.target.value, image: e.target.value } })}
+                        />
+                      </div>
+                    </div>
+                  </div>
+
                   <div className="form-row">
                     <div className="admin-field-group">
                       <label className="admin-field-label">LIVE DEMO URL</label>
