@@ -40,6 +40,11 @@ export default function AdminDashboard() {
   const [uploadProgress, setUploadProgress] = useState<number | null>(null);
   const [isUploadingImage, setIsUploadingImage] = useState(false);
 
+  // Direct CV URL state
+  const [directCvUrlInput, setDirectCvUrlInput] = useState('');
+  const [directCvNameInput, setDirectCvNameInput] = useState('Md_Samim_Resume.pdf');
+  const [isSavingCvUrl, setIsSavingCvUrl] = useState(false);
+
   // Modal / Form States for CRUD
   const [editingItem, setEditingItem] = useState<{ type: string; data: any } | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -305,6 +310,44 @@ export default function AdminDashboard() {
       toast.error('Upload Error', { description: err.response?.data?.message || 'Upload failed' });
     }
   });
+
+  // Sync Direct CV URL state with current CV data
+  useEffect(() => {
+    if (cvData?.cvUrl) {
+      setDirectCvUrlInput(cvData.cvUrl);
+    }
+    if (cvData?.cvOriginalName) {
+      setDirectCvNameInput(cvData.cvOriginalName);
+    }
+  }, [cvData]);
+
+  const handleSaveDirectCvUrl = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!directCvUrlInput.trim()) {
+      toast.error('Please enter a valid CV/Resume URL (https://...)');
+      return;
+    }
+
+    setIsSavingCvUrl(true);
+    try {
+      await api.put('/cv', {
+        cvUrl: directCvUrlInput.trim(),
+        cvOriginalName: directCvNameInput.trim() || 'Md_Samim_Resume.pdf'
+      }, { headers: getHeaders() });
+
+      toast.success('Direct CV Link Synced Live ✦', {
+        description: 'Homepage and visiting card download buttons are now connected to this link.'
+      });
+      queryClient.invalidateQueries({ queryKey: ['cv'] });
+      refetchCv();
+    } catch (err: any) {
+      toast.error('Failed to update CV link', {
+        description: err.response?.data?.message || 'Server error'
+      });
+    } finally {
+      setIsSavingCvUrl(false);
+    }
+  };
 
   const processFile = (file: File) => {
     const ext = file.name.split('.').pop()?.toLowerCase();
@@ -878,6 +921,29 @@ export default function AdminDashboard() {
                             <span className="admin-tech-chip" key={i}>{t}</span>
                           ))}
                         </div>
+
+                        {(c.courseUrl || c.clientUrl || c.serverUrl) && (
+                          <div className="admin-links-row">
+                            {c.courseUrl && (
+                              <a href={c.courseUrl} target="_blank" rel="noopener noreferrer" className="admin-link-badge live" title={c.courseUrl}>
+                                <span>🎓 Live Course</span>
+                                <span className="pill-arrow">↗</span>
+                              </a>
+                            )}
+                            {c.clientUrl && (
+                              <a href={c.clientUrl} target="_blank" rel="noopener noreferrer" className="admin-link-badge client" title={c.clientUrl}>
+                                <span>💻 Client Starter</span>
+                                <span className="pill-arrow">↗</span>
+                              </a>
+                            )}
+                            {c.serverUrl && (
+                              <a href={c.serverUrl} target="_blank" rel="noopener noreferrer" className="admin-link-badge server" title={c.serverUrl}>
+                                <span>⚙️ Server Repo</span>
+                                <span className="pill-arrow">↗</span>
+                              </a>
+                            )}
+                          </div>
+                        )}
                       </div>
                     ))}
                   </div>
@@ -1121,6 +1187,35 @@ export default function AdminDashboard() {
                             <span className="admin-tech-chip" key={i}>{t}</span>
                           ))}
                         </div>
+
+                        {(proj.liveUrl || proj.clientUrl || proj.serverUrl || proj.githubUrl) && (
+                          <div className="admin-links-row">
+                            {proj.liveUrl && (
+                              <a href={proj.liveUrl} target="_blank" rel="noopener noreferrer" className="admin-link-badge live" title={proj.liveUrl}>
+                                <span>🌐 Live Site</span>
+                                <span className="pill-arrow">↗</span>
+                              </a>
+                            )}
+                            {proj.clientUrl && (
+                              <a href={proj.clientUrl} target="_blank" rel="noopener noreferrer" className="admin-link-badge client" title={proj.clientUrl}>
+                                <span>💻 Client Site</span>
+                                <span className="pill-arrow">↗</span>
+                              </a>
+                            )}
+                            {proj.serverUrl && (
+                              <a href={proj.serverUrl} target="_blank" rel="noopener noreferrer" className="admin-link-badge server" title={proj.serverUrl}>
+                                <span>⚙️ Server Site</span>
+                                <span className="pill-arrow">↗</span>
+                              </a>
+                            )}
+                            {proj.githubUrl && (
+                              <a href={proj.githubUrl} target="_blank" rel="noopener noreferrer" className="admin-link-badge github" title={proj.githubUrl}>
+                                <span>🐙 GitHub</span>
+                                <span className="pill-arrow">↗</span>
+                              </a>
+                            )}
+                          </div>
+                        )}
                       </div>
                     ))}
                   </div>
@@ -1256,8 +1351,8 @@ export default function AdminDashboard() {
                 <div className="admin-tab-content">
                   <div className="tab-header-row">
                     <div>
-                      <h2 className="tab-title">Cloudinary Dynamic CV Manager</h2>
-                      <p className="tab-desc">Upload, inspect, and manage your official PDF resume.</p>
+                      <h2 className="tab-title">Dynamic CV &amp; Resume Manager</h2>
+                      <p className="tab-desc">Upload from your device or paste a direct cloud link to keep your portfolio resume live.</p>
                     </div>
                   </div>
 
@@ -1271,14 +1366,31 @@ export default function AdminDashboard() {
                           </svg>
                         </div>
                         <div>
-                          <h3 className="cv-filename">{cvData.cvOriginalName || 'Md_Samim_Resume.pdf'}</h3>
-                          <span className="cv-timestamp">Synced via Cloudinary • Ready for instant download</span>
+                          <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                            <span className="online-pulse-dot"></span>
+                            <h3 className="cv-filename">{cvData.cvOriginalName || 'Md_Samim_Resume.pdf'}</h3>
+                          </div>
+                          <span className="cv-timestamp">
+                            Active Live Sync • {cvData.cvSize ? `${Math.round(cvData.cvSize / 1024)} KB • ` : ''}Ready for 1-click visitor downloads
+                          </span>
                         </div>
                       </div>
 
                       <div className="cv-button-group">
                         <a href={cvData.cvUrl} target="_blank" rel="noopener noreferrer" className="cv-action-btn view-btn">
-                          View PDF
+                          <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" strokeWidth="2.2">
+                            <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                            <circle cx="12" cy="12" r="3"></circle>
+                          </svg>
+                          <span>View PDF</span>
+                        </a>
+                        <a href={`${api.defaults.baseURL}/cv/download`} target="_blank" rel="noopener noreferrer" className="cv-action-btn download-test-btn">
+                          <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" strokeWidth="2.2">
+                            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                            <polyline points="7 10 12 15 17 10"></polyline>
+                            <line x1="12" y1="15" x2="12" y2="3"></line>
+                          </svg>
+                          <span>Test Download</span>
                         </a>
                         <button
                           type="button"
@@ -1286,46 +1398,104 @@ export default function AdminDashboard() {
                           onClick={async () => {
                             if (window.confirm('Are you sure you want to remove the current CV?')) {
                               await api.delete('/cv', { headers: getHeaders() });
-                              toast.success('CV Removed');
+                              toast.success('CV Removed Successfully');
                               queryClient.invalidateQueries({ queryKey: ['cv'] });
+                              refetchCv();
                             }
                           }}
                         >
-                          Delete
+                          ✕ Remove
                         </button>
                       </div>
                     </div>
                   ) : (
                     <div className="cv-empty-banner">
-                      <p>No active resume uploaded. Upload below to activate the download button on the homepage.</p>
+                      <p>⚠️ No active resume linked yet. Upload a file from your device below or paste a direct URL to activate portfolio download buttons.</p>
                     </div>
                   )}
 
-                  <input
-                    type="file"
-                    ref={fileInputRef}
-                    onChange={(e) => e.target.files?.[0] && processFile(e.target.files[0])}
-                    accept=".pdf,.doc,.docx"
-                    style={{ display: 'none' }}
-                  />
-
-                  <div
-                    className={`admin-dropzone ${isDragging ? 'dropzone-active' : ''}`}
-                    onDragOver={(e) => { e.preventDefault(); setIsDragging(true); }}
-                    onDragLeave={() => setIsDragging(false)}
-                    onDrop={handleDrop}
-                    onClick={() => fileInputRef.current?.click()}
-                  >
-                    <div className="dropzone-text">
-                      <h4 className="dropzone-headline">Drag &amp; Drop New CV Document</h4>
-                      <p className="dropzone-subheadline">PDF or Word (.pdf, .docx) • Instant Live Sync</p>
-                    </div>
-                    <button type="button" className="dropzone-browse-btn">Browse Local Files</button>
-                    {uploadProgress !== null && (
-                      <div className="dropzone-progress-wrap">
-                        <span className="progress-text">{uploadProgress}% Uploading...</span>
+                  {/* Dual Upload Strategy Grid */}
+                  <div className="cv-dual-methods-grid">
+                    {/* Method 1: Device File Upload & Drag-and-Drop */}
+                    <div className="cv-method-card">
+                      <div className="cv-method-header">
+                        <span className="cv-method-pill">METHOD 1</span>
+                        <h4 className="cv-method-title">Upload Local Device File</h4>
                       </div>
-                    )}
+                      <p className="cv-method-desc">Select or drag &amp; drop a PDF or Word file from your computer.</p>
+
+                      <input
+                        type="file"
+                        ref={fileInputRef}
+                        onChange={(e) => e.target.files?.[0] && processFile(e.target.files[0])}
+                        accept=".pdf,.doc,.docx"
+                        style={{ display: 'none' }}
+                      />
+
+                      <div
+                        className={`admin-dropzone ${isDragging ? 'dropzone-active' : ''}`}
+                        onDragOver={(e) => { e.preventDefault(); setIsDragging(true); }}
+                        onDragLeave={() => setIsDragging(false)}
+                        onDrop={handleDrop}
+                        onClick={() => fileInputRef.current?.click()}
+                      >
+                        <div className="dropzone-text">
+                          <h4 className="dropzone-headline">📁 Click or Drag &amp; Drop PDF</h4>
+                          <p className="dropzone-subheadline">Supported: PDF (.pdf), Word (.docx) • Auto-sync</p>
+                        </div>
+                        <button type="button" className="dropzone-browse-btn" onClick={(e) => { e.stopPropagation(); fileInputRef.current?.click(); }}>
+                          Browse Files
+                        </button>
+                        {uploadProgress !== null && (
+                          <div className="dropzone-progress-wrap">
+                            <span className="progress-text">{uploadProgress}% Uploading to Cloud...</span>
+                          </div>
+                        )}
+                      </div>
+                    </div>
+
+                    {/* Method 2: Direct URL / Cloud Link Input */}
+                    <div className="cv-method-card">
+                      <div className="cv-method-header">
+                        <span className="cv-method-pill">METHOD 2</span>
+                        <h4 className="cv-method-title">Direct URL / Cloud Resume Link</h4>
+                      </div>
+                      <p className="cv-method-desc">Paste a Google Drive, Cloudinary, AWS S3, or raw PDF link.</p>
+
+                      <form onSubmit={handleSaveDirectCvUrl} className="cv-direct-url-form">
+                        <div className="admin-field-group">
+                          <label className="admin-field-label">DIRECT CV / RESUME URL</label>
+                          <input
+                            type="text"
+                            className="admin-form-input"
+                            placeholder="https://drive.google.com/... or https://res.cloudinary.com/..."
+                            value={directCvUrlInput}
+                            onChange={(e) => setDirectCvUrlInput(e.target.value)}
+                            required
+                          />
+                        </div>
+
+                        <div className="admin-field-group">
+                          <label className="admin-field-label">RESUME DISPLAY NAME</label>
+                          <input
+                            type="text"
+                            className="admin-form-input"
+                            placeholder="Md_Samim_Resume_2026.pdf"
+                            value={directCvNameInput}
+                            onChange={(e) => setDirectCvNameInput(e.target.value)}
+                          />
+                        </div>
+
+                        <button
+                          type="submit"
+                          className="admin-primary-btn"
+                          disabled={isSavingCvUrl}
+                          style={{ width: '100%', justifyContent: 'center' }}
+                        >
+                          <span>{isSavingCvUrl ? 'Saving Live...' : 'Save Direct CV Link Live ✦'}</span>
+                        </button>
+                      </form>
+                    </div>
                   </div>
                 </div>
               )}
@@ -1566,13 +1736,36 @@ export default function AdminDashboard() {
                       />
                     </div>
                   </div>
+                  <div className="form-row">
+                    <div className="admin-field-group">
+                      <label className="admin-field-label">COURSE PLATFORM / LIVE LINK</label>
+                      <input
+                        type="text"
+                        className="admin-form-input"
+                        placeholder="https://www.udemy.com/course/claude-sonnet"
+                        value={editingItem.data.courseUrl || ''}
+                        onChange={(e) => setEditingItem({ ...editingItem, data: { ...editingItem.data, courseUrl: e.target.value } })}
+                      />
+                    </div>
+                    <div className="admin-field-group">
+                      <label className="admin-field-label">CLIENT SITE / STARTER REPO</label>
+                      <input
+                        type="text"
+                        className="admin-form-input"
+                        placeholder="https://github.com/MdShamim5669/course-client"
+                        value={editingItem.data.clientUrl || ''}
+                        onChange={(e) => setEditingItem({ ...editingItem, data: { ...editingItem.data, clientUrl: e.target.value } })}
+                      />
+                    </div>
+                  </div>
                   <div className="admin-field-group">
-                    <label className="admin-field-label">COURSE URL</label>
+                    <label className="admin-field-label">SERVER SITE / BACKEND REPO</label>
                     <input
                       type="text"
                       className="admin-form-input"
-                      value={editingItem.data.courseUrl || ''}
-                      onChange={(e) => setEditingItem({ ...editingItem, data: { ...editingItem.data, courseUrl: e.target.value } })}
+                      placeholder="https://github.com/MdShamim5669/course-backend-api"
+                      value={editingItem.data.serverUrl || ''}
+                      onChange={(e) => setEditingItem({ ...editingItem, data: { ...editingItem.data, serverUrl: e.target.value } })}
                     />
                   </div>
                   <div className="admin-field-group">
@@ -1829,19 +2022,43 @@ export default function AdminDashboard() {
 
                   <div className="form-row">
                     <div className="admin-field-group">
-                      <label className="admin-field-label">LIVE DEMO URL</label>
+                      <label className="admin-field-label">LIVE DEMO / PRODUCTION URL</label>
                       <input
                         type="text"
                         className="admin-form-input"
+                        placeholder="https://dineflow.vercel.app"
                         value={editingItem.data.liveUrl || ''}
                         onChange={(e) => setEditingItem({ ...editingItem, data: { ...editingItem.data, liveUrl: e.target.value } })}
                       />
                     </div>
                     <div className="admin-field-group">
-                      <label className="admin-field-label">GITHUB REPO URL</label>
+                      <label className="admin-field-label">CLIENT SITE / FRONTEND REPO</label>
                       <input
                         type="text"
                         className="admin-form-input"
+                        placeholder="https://github.com/MdShamim5669/dineflow"
+                        value={editingItem.data.clientUrl || ''}
+                        onChange={(e) => setEditingItem({ ...editingItem, data: { ...editingItem.data, clientUrl: e.target.value } })}
+                      />
+                    </div>
+                  </div>
+                  <div className="form-row">
+                    <div className="admin-field-group">
+                      <label className="admin-field-label">SERVER SITE / BACKEND API REPO</label>
+                      <input
+                        type="text"
+                        className="admin-form-input"
+                        placeholder="https://github.com/MdShamim5669/dineflow-server"
+                        value={editingItem.data.serverUrl || ''}
+                        onChange={(e) => setEditingItem({ ...editingItem, data: { ...editingItem.data, serverUrl: e.target.value } })}
+                      />
+                    </div>
+                    <div className="admin-field-group">
+                      <label className="admin-field-label">MAIN GITHUB REPO URL</label>
+                      <input
+                        type="text"
+                        className="admin-form-input"
+                        placeholder="https://github.com/MdShamim5669/dineflow"
                         value={editingItem.data.githubUrl || ''}
                         onChange={(e) => setEditingItem({ ...editingItem, data: { ...editingItem.data, githubUrl: e.target.value } })}
                       />
