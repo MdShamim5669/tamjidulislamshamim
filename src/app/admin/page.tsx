@@ -8,6 +8,20 @@ import api from '../../lib/api';
 
 type TabType = 'services' | 'courses' | 'experience' | 'education' | 'projects' | 'inquiries' | 'settings' | 'cv';
 
+const toArray = (val: any): string[] => {
+  if (!val) return [];
+  if (Array.isArray(val)) return val;
+  if (typeof val === 'string') {
+    try {
+      const parsed = JSON.parse(val);
+      if (Array.isArray(parsed)) return parsed;
+    } catch {
+      return val.split(',').map((s) => s.trim()).filter(Boolean);
+    }
+  }
+  return [];
+};
+
 export default function AdminDashboard() {
   const queryClient = useQueryClient();
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -39,11 +53,12 @@ export default function AdminDashboard() {
 
   const getHeaders = useCallback(() => {
     const headers: Record<string, string> = {};
-    if (authToken) {
-      if (authToken.startsWith('eyJ')) {
-        headers['Authorization'] = `Bearer ${authToken}`;
+    const token = authToken || (typeof window !== 'undefined' ? localStorage.getItem('admin_token') || localStorage.getItem('admin_cv_key') : null);
+    if (token) {
+      if (token.startsWith('eyJ')) {
+        headers['Authorization'] = `Bearer ${token}`;
       } else {
-        headers['x-admin-key'] = authToken;
+        headers['x-admin-key'] = token;
       }
     }
     return headers;
@@ -52,7 +67,7 @@ export default function AdminDashboard() {
   // ==========================================
   // QUERIES FOR ALL DYNAMIC SECTIONS
   // ==========================================
-  const { data: services = [], refetch: refetchServices } = useQuery({
+  const { data: services = [] } = useQuery({
     queryKey: ['adminServices'],
     queryFn: async () => {
       const res = await api.get('/services');
@@ -60,7 +75,7 @@ export default function AdminDashboard() {
     }
   });
 
-  const { data: courses = [], refetch: refetchCourses } = useQuery({
+  const { data: courses = [] } = useQuery({
     queryKey: ['adminCourses'],
     queryFn: async () => {
       const res = await api.get('/courses');
@@ -68,7 +83,7 @@ export default function AdminDashboard() {
     }
   });
 
-  const { data: experiences = [], refetch: refetchExperiences } = useQuery({
+  const { data: experiences = [] } = useQuery({
     queryKey: ['adminExperiences'],
     queryFn: async () => {
       const res = await api.get('/experiences');
@@ -76,7 +91,7 @@ export default function AdminDashboard() {
     }
   });
 
-  const { data: educations = [], refetch: refetchEducations } = useQuery({
+  const { data: educations = [] } = useQuery({
     queryKey: ['adminEducations'],
     queryFn: async () => {
       const res = await api.get('/education');
@@ -84,7 +99,7 @@ export default function AdminDashboard() {
     }
   });
 
-  const { data: processes = [], refetch: refetchProcesses } = useQuery({
+  const { data: processes = [] } = useQuery({
     queryKey: ['adminProcesses'],
     queryFn: async () => {
       const res = await api.get('/education/processes');
@@ -92,7 +107,7 @@ export default function AdminDashboard() {
     }
   });
 
-  const { data: projects = [], refetch: refetchProjects } = useQuery({
+  const { data: projects = [] } = useQuery({
     queryKey: ['adminProjects'],
     queryFn: async () => {
       const res = await api.get('/projects');
@@ -110,7 +125,7 @@ export default function AdminDashboard() {
     enabled: Boolean(authToken)
   });
 
-  const { data: settingsData, refetch: refetchSettings } = useQuery({
+  const { data: settingsData } = useQuery({
     queryKey: ['adminSettings'],
     queryFn: async () => {
       const res = await api.get('/settings');
@@ -181,7 +196,7 @@ export default function AdminDashboard() {
       const res = await api[method](endpoint, data, { headers: getHeaders() });
       return res.data;
     },
-    onSuccess: (_, vars) => {
+    onSuccess: () => {
       toast.success('Saved Successfully ✦');
       setIsModalOpen(false);
       setEditingItem(null);
@@ -199,7 +214,7 @@ export default function AdminDashboard() {
       return res.data;
     },
     onSuccess: () => {
-      toast.success('Item Deleted ✦');
+      toast.success('Item Deleted Successfully ✦');
       queryClient.invalidateQueries();
     },
     onError: (err: any) => {
@@ -564,7 +579,6 @@ export default function AdminDashboard() {
               </div>
 
               <div className="workspace-header-right">
-                {/* Quick CTA depending on current tab */}
                 {activeTab === 'projects' && (
                   <button
                     type="button"
@@ -572,7 +586,7 @@ export default function AdminDashboard() {
                     onClick={() => {
                       setEditingItem({
                         type: 'project',
-                        data: { title: '', subtitle: '', category: 'AI_SYSTEM', description: '', points: [], techStack: [], liveUrl: '', clientUrl: '', serverUrl: '', githubUrl: '', image: '', featured: true }
+                        data: { title: '', subtitle: '', category: 'AI_SYSTEM', description: '', techStack: [], liveUrl: '', clientUrl: '', serverUrl: '', githubUrl: '', image: '', featured: true }
                       });
                       setIsModalOpen(true);
                     }}
@@ -602,7 +616,7 @@ export default function AdminDashboard() {
                     onClick={() => {
                       setEditingItem({
                         type: 'service',
-                        data: { number: `0${services.length + 1}`, category: '', title: '', tags: [], overview: '', points: [{ bold: '', text: '' }] }
+                        data: { number: `0${services.length + 1}`, category: '', title: '', tags: [], overview: '' }
                       });
                       setIsModalOpen(true);
                     }}
@@ -663,620 +677,571 @@ export default function AdminDashboard() {
               {/* TAB 1: SERVICES & SPECIALIZATION CRUD */}
               {activeTab === 'services' && (
                 <div className="admin-tab-content">
-                <div className="tab-header-row">
-                  <div>
-                    <h2 className="tab-title">Services &amp; Specialization Manager</h2>
-                    <p className="tab-desc">Add, update, or remove service offerings displayed in the accordion section.</p>
-                  </div>
-                  <button
-                    type="button"
-                    className="admin-primary-btn"
-                    onClick={() => {
-                      setEditingItem({
-                        type: 'service',
-                        data: { number: `0${services.length + 1}`, category: '', title: '', tags: [], overview: '', points: [{ bold: '', text: '' }] }
-                      });
-                      setIsModalOpen(true);
-                    }}
-                  >
-                    + Add New Service ✦
-                  </button>
-                </div>
-
-                <div className="admin-cards-list">
-                  {services.map((item: any) => (
-                    <div className="admin-item-card" key={item.id}>
-                      <div className="admin-item-top">
-                        <div>
-                          <span className="admin-tag-pill">{item.number} • {item.category}</span>
-                          <h3 className="admin-item-title">{item.title}</h3>
-                        </div>
-                        <div className="admin-item-actions">
-                          <button
-                            type="button"
-                            className="cv-action-btn view-btn"
-                            onClick={() => {
-                              setEditingItem({ type: 'service', data: item });
-                              setIsModalOpen(true);
-                            }}
-                          >
-                            Edit
-                          </button>
-                          <button
-                            type="button"
-                            className="cv-action-btn delete-btn"
-                            onClick={() => {
-                              if (confirm(`Delete service "${item.title}"?`)) {
-                                deleteItemMutation.mutate(`/services/${item.id}`);
-                              }
-                            }}
-                          >
-                            Delete
-                          </button>
-                        </div>
-                      </div>
-                      <p className="admin-item-desc">{item.overview}</p>
-                      <div className="admin-item-chips">
-                        {item.tags?.map((tag: string, i: number) => (
-                          <span className="exp-tag" key={i}>{tag}</span>
-                        ))}
-                      </div>
+                  <div className="tab-header-row">
+                    <div>
+                      <h2 className="tab-title">Services &amp; Specialization Manager</h2>
+                      <p className="tab-desc">Add, update, or remove service offerings displayed in the accordion section.</p>
                     </div>
-                  ))}
-                </div>
-              </div>
-            )}
-
-            {/* TAB 2: COURSES DEVELOPED CRUD */}
-            {activeTab === 'courses' && (
-              <div className="admin-tab-content">
-                <div className="tab-header-row">
-                  <div>
-                    <h2 className="tab-title">Udemy &amp; Developed Courses Manager</h2>
-                    <p className="tab-desc">Manage published masterclasses, student ratings, and topic tags.</p>
                   </div>
-                  <button
-                    type="button"
-                    className="admin-primary-btn"
-                    onClick={() => {
-                      setEditingItem({
-                        type: 'course',
-                        data: { title: '', slug: `course-${Date.now()}`, platform: 'Udemy Masterclass', rating: 4.9, studentsCount: 1500, description: '', topics: [], courseUrl: 'https://udemy.com' }
-                      });
-                      setIsModalOpen(true);
-                    }}
-                  >
-                    + Add New Course ✦
-                  </button>
-                </div>
 
-                <div className="admin-cards-list">
-                  {courses.map((c: any) => (
-                    <div className="admin-item-card" key={c.id}>
-                      <div className="admin-item-top">
-                        <div>
-                          <span className="admin-tag-pill">{c.platform || 'Udemy'} • ★ {c.rating || 4.8} ({c.studentsCount || 1200}+ Students)</span>
-                          <h3 className="admin-item-title">{c.title}</h3>
-                        </div>
-                        <div className="admin-item-actions">
-                          <button
-                            type="button"
-                            className="cv-action-btn view-btn"
-                            onClick={() => {
-                              setEditingItem({ type: 'course', data: c });
-                              setIsModalOpen(true);
-                            }}
-                          >
-                            Edit
-                          </button>
-                          <button
-                            type="button"
-                            className="cv-action-btn delete-btn"
-                            onClick={() => {
-                              if (confirm(`Delete course "${c.title}"?`)) {
-                                deleteItemMutation.mutate(`/courses/${c.id}`);
-                              }
-                            }}
-                          >
-                            Delete
-                          </button>
-                        </div>
-                      </div>
-                      <p className="admin-item-desc">{c.description}</p>
-                      <div className="admin-item-chips">
-                        {c.topics?.map((t: string, i: number) => (
-                          <span className="exp-tag" key={i}>{t}</span>
-                        ))}
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            )}
-
-            {/* TAB 3: WORK EXPERIENCE CRUD */}
-            {activeTab === 'experience' && (
-              <div className="admin-tab-content">
-                <div className="tab-header-row">
-                  <div>
-                    <h2 className="tab-title">Work Experience Timeline Manager</h2>
-                    <p className="tab-desc">Manage career roles, milestones, accomplishment bullet points, and tech stacks.</p>
-                  </div>
-                  <button
-                    type="button"
-                    className="admin-primary-btn"
-                    onClick={() => {
-                      setEditingItem({
-                        type: 'experience',
-                        data: { role: '', company: '', location: 'Remote', employmentType: 'Full-Time', startDate: '2024', endDate: 'Present', current: true, bullets: [''], techStack: [] }
-                      });
-                      setIsModalOpen(true);
-                    }}
-                  >
-                    + Add Experience ✦
-                  </button>
-                </div>
-
-                <div className="admin-cards-list">
-                  {experiences.map((exp: any) => (
-                    <div className="admin-item-card" key={exp.id}>
-                      <div className="admin-item-top">
-                        <div>
-                          <span className="admin-tag-pill">{exp.company} • {exp.startDate} – {exp.endDate} ({exp.employmentType})</span>
-                          <h3 className="admin-item-title">{exp.role}</h3>
-                        </div>
-                        <div className="admin-item-actions">
-                          <button
-                            type="button"
-                            className="cv-action-btn view-btn"
-                            onClick={() => {
-                              setEditingItem({ type: 'experience', data: exp });
-                              setIsModalOpen(true);
-                            }}
-                          >
-                            Edit
-                          </button>
-                          <button
-                            type="button"
-                            className="cv-action-btn delete-btn"
-                            onClick={() => {
-                              if (confirm(`Delete experience "${exp.role}"?`)) {
-                                deleteItemMutation.mutate(`/experiences/${exp.id}`);
-                              }
-                            }}
-                          >
-                            Delete
-                          </button>
-                        </div>
-                      </div>
-                      <ul className="admin-bullets-list">
-                        {exp.bullets?.map((b: string, i: number) => (
-                          <li key={i}>{b}</li>
-                        ))}
-                      </ul>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            )}
-
-            {/* TAB 4: EDUCATION & WORK PROCESS CRUD */}
-            {activeTab === 'education' && (
-              <div className="admin-tab-content">
-                <div className="tab-header-row">
-                  <div>
-                    <h2 className="tab-title">Academic Degrees &amp; Engineering Workflow Steps</h2>
-                    <p className="tab-desc">Configure academic degrees and the 6-step engineering lifecycle pipeline.</p>
-                  </div>
-                  <div style={{ display: 'flex', gap: '0.75rem' }}>
-                    <button
-                      type="button"
-                      className="admin-primary-btn"
-                      onClick={() => {
-                        setEditingItem({
-                          type: 'education',
-                          data: { institution: '', degree: 'B.Sc. in CSE', field: 'Computer Science', startDate: '2020', endDate: '2024', location: 'Sylhet, Bangladesh', description: 'AI & Distributed Systems' }
-                        });
-                        setIsModalOpen(true);
-                      }}
-                    >
-                      + Add Degree
-                    </button>
-                    <button
-                      type="button"
-                      className="admin-primary-btn"
-                      onClick={() => {
-                        setEditingItem({
-                          type: 'process',
-                          data: { stepNumber: `0${processes.length + 1}`, title: '', description: '', badge: `0${processes.length + 1}. PHASE` }
-                        });
-                        setIsModalOpen(true);
-                      }}
-                    >
-                      + Add Process Step
-                    </button>
-                  </div>
-                </div>
-
-                <h3 style={{ fontSize: '1.1rem', color: 'var(--accent-gold)', marginTop: '1rem', marginBottom: '0.5rem' }}>Academic Degrees ({educations.length})</h3>
-                <div className="admin-cards-list">
-                  {educations.map((edu: any) => (
-                    <div className="admin-item-card" key={edu.id}>
-                      <div className="admin-item-top">
-                        <div>
-                          <span className="admin-tag-pill">{edu.institution} • {edu.startDate} – {edu.endDate}</span>
-                          <h3 className="admin-item-title">{edu.degree}</h3>
-                        </div>
-                        <div className="admin-item-actions">
-                          <button
-                            type="button"
-                            className="cv-action-btn view-btn"
-                            onClick={() => {
-                              setEditingItem({ type: 'education', data: edu });
-                              setIsModalOpen(true);
-                            }}
-                          >
-                            Edit
-                          </button>
-                          <button
-                            type="button"
-                            className="cv-action-btn delete-btn"
-                            onClick={() => {
-                              if (confirm(`Delete degree "${edu.degree}"?`)) {
-                                deleteItemMutation.mutate(`/education/${edu.id}`);
-                              }
-                            }}
-                          >
-                            Delete
-                          </button>
-                        </div>
-                      </div>
-                      <p className="admin-item-desc">{edu.description || edu.field}</p>
-                    </div>
-                  ))}
-                </div>
-
-                <h3 style={{ fontSize: '1.1rem', color: 'var(--accent-gold)', marginTop: '2rem', marginBottom: '0.5rem' }}>Engineering Workflow Steps ({processes.length})</h3>
-                <div className="admin-cards-list">
-                  {processes.map((p: any) => (
-                    <div className="admin-item-card" key={p.id}>
-                      <div className="admin-item-top">
-                        <div>
-                          <span className="admin-tag-pill">{p.stepNumber} • {p.badge || 'WORKFLOW'}</span>
-                          <h3 className="admin-item-title">{p.title}</h3>
-                        </div>
-                        <div className="admin-item-actions">
-                          <button
-                            type="button"
-                            className="cv-action-btn view-btn"
-                            onClick={() => {
-                              setEditingItem({ type: 'process', data: p });
-                              setIsModalOpen(true);
-                            }}
-                          >
-                            Edit
-                          </button>
-                          <button
-                            type="button"
-                            className="cv-action-btn delete-btn"
-                            onClick={() => {
-                              if (confirm(`Delete workflow step "${p.title}"?`)) {
-                                deleteItemMutation.mutate(`/education/processes/${p.id}`);
-                              }
-                            }}
-                          >
-                            Delete
-                          </button>
-                        </div>
-                      </div>
-                      <p className="admin-item-desc">{p.description}</p>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            )}
-
-            {/* TAB 5: SELECTED PROJECTS CRUD */}
-            {activeTab === 'projects' && (
-              <div className="admin-tab-content">
-                <div className="tab-header-row">
-                  <div>
-                    <h2 className="tab-title">Selected Projects Portfolio Manager</h2>
-                    <p className="tab-desc">Add or update featured web apps, AI systems, and machine learning models.</p>
-                  </div>
-                  <button
-                    type="button"
-                    className="admin-primary-btn"
-                    onClick={() => {
-                      setEditingItem({
-                        type: 'project',
-                        data: { title: '', slug: `project-${Date.now()}`, category: 'Full-Stack Web App', description: '', liveUrl: '', githubUrl: '', techStack: ['Next.js', 'TypeScript', 'Node.js'], featured: true }
-                      });
-                      setIsModalOpen(true);
-                    }}
-                  >
-                    + Add Project ✦
-                  </button>
-                </div>
-
-                <div className="admin-cards-list">
-                  {projects.map((proj: any) => (
-                    <div className="admin-item-card" key={proj.id}>
-                      <div className="admin-item-top">
-                        <div>
-                          <span className="admin-tag-pill">{proj.category}</span>
-                          <h3 className="admin-item-title">{proj.title}</h3>
-                        </div>
-                        <div className="admin-item-actions">
-                          <button
-                            type="button"
-                            className="cv-action-btn view-btn"
-                            onClick={() => {
-                              setEditingItem({ type: 'project', data: proj });
-                              setIsModalOpen(true);
-                            }}
-                          >
-                            Edit
-                          </button>
-                          <button
-                            type="button"
-                            className="cv-action-btn delete-btn"
-                            onClick={() => {
-                              if (confirm(`Delete project "${proj.title}"?`)) {
-                                deleteItemMutation.mutate(`/projects/${proj.id}`);
-                              }
-                            }}
-                          >
-                            Delete
-                          </button>
-                        </div>
-                      </div>
-                      <p className="admin-item-desc">{proj.description}</p>
-                      <div className="admin-item-chips">
-                        {proj.techStack?.map((t: string, i: number) => (
-                          <span className="exp-tag" key={i}>{t}</span>
-                        ))}
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            )}
-
-            {/* TAB 6: INQUIRIES */}
-            {activeTab === 'inquiries' && (
-              <div className="admin-tab-content">
-                <div className="tab-header-row">
-                  <div>
-                    <h2 className="tab-title">Client Inquiries &amp; Get In Touch</h2>
-                    <p className="tab-desc">Direct inquiries submitted via the Resend contact pipeline.</p>
-                  </div>
-                  <button type="button" className="refresh-btn" onClick={() => refetchInquiries()}>
-                    Refresh
-                  </button>
-                </div>
-
-                {inquiries.length > 0 ? (
-                  <div className="inquiries-list">
-                    {inquiries.map((msg: any) => (
-                      <div className="inquiry-card" key={msg.id}>
-                        <div className="inquiry-header">
-                          <div className="inquiry-user">
-                            <span className="inquiry-name">{msg.name}</span>
-                            <a href={`mailto:${msg.email}`} className="inquiry-email">
-                              {msg.email}
-                            </a>
+                  <div className="admin-cards-grid">
+                    {services.map((item: any) => (
+                      <div className="admin-glass-card" key={item.id}>
+                        <div className="admin-card-header">
+                          <div className="admin-card-title-group">
+                            <span className="admin-card-badge">{item.number || '01'} • {item.category}</span>
+                            <h3 className="admin-card-title">{item.title}</h3>
                           </div>
-                          <span className="inquiry-date">{new Date(msg.createdAt).toLocaleString()}</span>
+
+                          <div className="admin-card-actions">
+                            <button
+                              type="button"
+                              className="admin-action-btn edit"
+                              onClick={() => {
+                                setEditingItem({ type: 'service', data: item });
+                                setIsModalOpen(true);
+                              }}
+                            >
+                              <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" strokeWidth="2.2">
+                                <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+                                <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+                              </svg>
+                              <span>Edit</span>
+                            </button>
+                            <button
+                              type="button"
+                              className="admin-action-btn delete"
+                              onClick={() => {
+                                if (window.confirm(`Delete service "${item.title}"?`)) {
+                                  deleteItemMutation.mutate(`/services/${item.id}`);
+                                }
+                              }}
+                            >
+                              <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" strokeWidth="2.2">
+                                <polyline points="3 6 5 6 21 6"></polyline>
+                                <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+                              </svg>
+                              <span>Delete</span>
+                            </button>
+                          </div>
                         </div>
-                        {msg.subject && <h4 className="inquiry-subject">{msg.subject}</h4>}
-                        <p className="inquiry-body">{msg.message}</p>
+
+                        <p className="admin-card-desc">{item.overview}</p>
+
+                        <div className="admin-chips-wrap">
+                          {toArray(item.tags).map((tag: string, i: number) => (
+                            <span className="admin-tech-chip" key={i}>{tag}</span>
+                          ))}
+                        </div>
                       </div>
                     ))}
                   </div>
-                ) : (
-                  <div className="cv-empty-banner">
-                    <p>No inquiries received yet.</p>
-                  </div>
-                )}
-              </div>
-            )}
+                </div>
+              )}
 
-            {/* TAB 7: SITE & CONTACT SETTINGS */}
-            {activeTab === 'settings' && (
-              <div className="admin-tab-content">
-                <div className="tab-header-row">
-                  <div>
-                    <h2 className="tab-title">Site Configuration &amp; Contact Channels</h2>
-                    <p className="tab-desc">Changes here update the Hero, Footer, Visiting Card, and Navbar in real-time.</p>
+              {/* TAB 2: COURSES DEVELOPED CRUD */}
+              {activeTab === 'courses' && (
+                <div className="admin-tab-content">
+                  <div className="tab-header-row">
+                    <div>
+                      <h2 className="tab-title">Udemy &amp; Developed Courses Manager</h2>
+                      <p className="tab-desc">Manage published masterclasses, student ratings, and topic tags.</p>
+                    </div>
+                  </div>
+
+                  <div className="admin-cards-grid">
+                    {courses.map((c: any) => (
+                      <div className="admin-glass-card" key={c.id}>
+                        <div className="admin-card-header">
+                          <div className="admin-card-title-group">
+                            <span className="admin-card-badge">{c.platform || 'Udemy'} • ★ {c.rating || 4.8} ({c.studentsCount || 1200}+ Students)</span>
+                            <h3 className="admin-card-title">{c.title}</h3>
+                          </div>
+
+                          <div className="admin-card-actions">
+                            <button
+                              type="button"
+                              className="admin-action-btn edit"
+                              onClick={() => {
+                                setEditingItem({ type: 'course', data: c });
+                                setIsModalOpen(true);
+                              }}
+                            >
+                              <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" strokeWidth="2.2">
+                                <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+                                <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+                              </svg>
+                              <span>Edit</span>
+                            </button>
+                            <button
+                              type="button"
+                              className="admin-action-btn delete"
+                              onClick={() => {
+                                if (window.confirm(`Delete course "${c.title}"?`)) {
+                                  deleteItemMutation.mutate(`/courses/${c.id}`);
+                                }
+                              }}
+                            >
+                              <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" strokeWidth="2.2">
+                                <polyline points="3 6 5 6 21 6"></polyline>
+                                <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+                              </svg>
+                              <span>Delete</span>
+                            </button>
+                          </div>
+                        </div>
+
+                        <p className="admin-card-desc">{c.description}</p>
+
+                        <div className="admin-chips-wrap">
+                          {toArray(c.topics).map((t: string, i: number) => (
+                            <span className="admin-tech-chip" key={i}>{t}</span>
+                          ))}
+                        </div>
+                      </div>
+                    ))}
                   </div>
                 </div>
+              )}
 
-                {settingsForm && (
-                  <form className="settings-edit-form" onSubmit={handleSettingsSubmit}>
-                    <div className="form-row">
-                      <div className="admin-field-group">
-                        <label className="admin-field-label">PORTFOLIO TITLE / NAME</label>
-                        <input
-                          type="text"
-                          className="admin-form-input"
-                          value={settingsForm.siteTitle || ''}
-                          onChange={(e) => setSettingsForm({ ...settingsForm, siteTitle: e.target.value })}
-                        />
-                      </div>
-                      <div className="admin-field-group">
-                        <label className="admin-field-label">PRIMARY ADMIN EMAIL</label>
-                        <input
-                          type="email"
-                          className="admin-form-input"
-                          value={settingsForm.adminEmail || ''}
-                          onChange={(e) => setSettingsForm({ ...settingsForm, adminEmail: e.target.value })}
-                        />
-                      </div>
+              {/* TAB 3: WORK EXPERIENCE CRUD */}
+              {activeTab === 'experience' && (
+                <div className="admin-tab-content">
+                  <div className="tab-header-row">
+                    <div>
+                      <h2 className="tab-title">Work Experience Timeline Manager</h2>
+                      <p className="tab-desc">Manage career roles, milestones, accomplishment bullet points, and tech stacks.</p>
                     </div>
+                  </div>
 
-                    <div className="form-row">
-                      <div className="admin-field-group">
-                        <label className="admin-field-label">PHONE &amp; WHATSAPP</label>
-                        <input
-                          type="text"
-                          className="admin-form-input"
-                          value={settingsForm.phone || ''}
-                          onChange={(e) => setSettingsForm({ ...settingsForm, phone: e.target.value })}
-                        />
+                  <div className="admin-cards-grid">
+                    {experiences.map((exp: any) => (
+                      <div className="admin-glass-card" key={exp.id}>
+                        <div className="admin-card-header">
+                          <div className="admin-card-title-group">
+                            <span className="admin-card-badge">{exp.company} • {exp.startDate} – {exp.endDate} ({exp.employmentType})</span>
+                            <h3 className="admin-card-title">{exp.role}</h3>
+                          </div>
+
+                          <div className="admin-card-actions">
+                            <button
+                              type="button"
+                              className="admin-action-btn edit"
+                              onClick={() => {
+                                setEditingItem({ type: 'experience', data: exp });
+                                setIsModalOpen(true);
+                              }}
+                            >
+                              <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" strokeWidth="2.2">
+                                <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+                                <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+                              </svg>
+                              <span>Edit</span>
+                            </button>
+                            <button
+                              type="button"
+                              className="admin-action-btn delete"
+                              onClick={() => {
+                                if (window.confirm(`Delete experience "${exp.role}"?`)) {
+                                  deleteItemMutation.mutate(`/experiences/${exp.id}`);
+                                }
+                              }}
+                            >
+                              <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" strokeWidth="2.2">
+                                <polyline points="3 6 5 6 21 6"></polyline>
+                                <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+                              </svg>
+                              <span>Delete</span>
+                            </button>
+                          </div>
+                        </div>
+
+                        {exp.description && <p className="admin-card-desc">{exp.description}</p>}
+
+                        <ul className="admin-bullets-list">
+                          {toArray(exp.bullets).map((b: string, i: number) => (
+                            <li key={i}>{b}</li>
+                          ))}
+                        </ul>
                       </div>
-                      <div className="admin-field-group">
-                        <label className="admin-field-label">LOCATION</label>
-                        <input
-                          type="text"
-                          className="admin-form-input"
-                          value={settingsForm.location || ''}
-                          onChange={(e) => setSettingsForm({ ...settingsForm, location: e.target.value })}
-                        />
-                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {/* TAB 4: EDUCATION & WORK PROCESS CRUD */}
+              {activeTab === 'education' && (
+                <div className="admin-tab-content">
+                  <div className="tab-header-row">
+                    <div>
+                      <h2 className="tab-title">Academic Degrees &amp; Engineering Workflow Steps</h2>
+                      <p className="tab-desc">Configure academic degrees and the 4-phase engineering lifecycle.</p>
                     </div>
+                  </div>
 
-                    <div className="form-row">
-                      <div className="admin-field-group">
-                        <label className="admin-field-label">AVAILABILITY BADGE TEXT</label>
-                        <input
-                          type="text"
-                          className="admin-form-input"
-                          value={settingsForm.availabilityStatus || ''}
-                          onChange={(e) => setSettingsForm({ ...settingsForm, availabilityStatus: e.target.value })}
-                        />
+                  <h3 className="admin-subheading">Academic Degrees ({educations.length})</h3>
+                  <div className="admin-cards-grid">
+                    {educations.map((edu: any) => (
+                      <div className="admin-glass-card" key={edu.id}>
+                        <div className="admin-card-header">
+                          <div className="admin-card-title-group">
+                            <span className="admin-card-badge">{edu.institution} • {edu.startDate} – {edu.endDate}</span>
+                            <h3 className="admin-card-title">{edu.degree}</h3>
+                          </div>
+
+                          <div className="admin-card-actions">
+                            <button
+                              type="button"
+                              className="admin-action-btn edit"
+                              onClick={() => {
+                                setEditingItem({ type: 'education', data: edu });
+                                setIsModalOpen(true);
+                              }}
+                            >
+                              <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" strokeWidth="2.2">
+                                <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+                                <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+                              </svg>
+                              <span>Edit</span>
+                            </button>
+                            <button
+                              type="button"
+                              className="admin-action-btn delete"
+                              onClick={() => {
+                                if (window.confirm(`Delete degree "${edu.degree}"?`)) {
+                                  deleteItemMutation.mutate(`/education/${edu.id}`);
+                                }
+                              }}
+                            >
+                              <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" strokeWidth="2.2">
+                                <polyline points="3 6 5 6 21 6"></polyline>
+                                <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+                              </svg>
+                              <span>Delete</span>
+                            </button>
+                          </div>
+                        </div>
+                        <p className="admin-card-desc">{edu.description || edu.field}</p>
                       </div>
-                      <div className="admin-field-group">
-                        <label className="admin-field-label">HIHELLO DIGITAL CARD URL</label>
-                        <input
-                          type="text"
-                          className="admin-form-input"
-                          value={settingsForm.hihelloUrl || ''}
-                          onChange={(e) => setSettingsForm({ ...settingsForm, hihelloUrl: e.target.value })}
-                        />
+                    ))}
+                  </div>
+
+                  <h3 className="admin-subheading" style={{ marginTop: '24px' }}>Engineering Workflow Steps ({processes.length})</h3>
+                  <div className="admin-cards-grid">
+                    {processes.map((p: any) => (
+                      <div className="admin-glass-card" key={p.id}>
+                        <div className="admin-card-header">
+                          <div className="admin-card-title-group">
+                            <span className="admin-card-badge">{p.stepNumber} • {p.badge || 'WORKFLOW'}</span>
+                            <h3 className="admin-card-title">{p.title}</h3>
+                          </div>
+
+                          <div className="admin-card-actions">
+                            <button
+                              type="button"
+                              className="admin-action-btn edit"
+                              onClick={() => {
+                                setEditingItem({ type: 'process', data: p });
+                                setIsModalOpen(true);
+                              }}
+                            >
+                              <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" strokeWidth="2.2">
+                                <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+                                <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+                              </svg>
+                              <span>Edit</span>
+                            </button>
+                            <button
+                              type="button"
+                              className="admin-action-btn delete"
+                              onClick={() => {
+                                if (window.confirm(`Delete workflow step "${p.title}"?`)) {
+                                  deleteItemMutation.mutate(`/education/processes/${p.id}`);
+                                }
+                              }}
+                            >
+                              <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" strokeWidth="2.2">
+                                <polyline points="3 6 5 6 21 6"></polyline>
+                                <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+                              </svg>
+                              <span>Delete</span>
+                            </button>
+                          </div>
+                        </div>
+                        <p className="admin-card-desc">{p.description}</p>
                       </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {/* TAB 5: SELECTED PROJECTS CRUD */}
+              {activeTab === 'projects' && (
+                <div className="admin-tab-content">
+                  <div className="tab-header-row">
+                    <div>
+                      <h2 className="tab-title">Selected Projects Portfolio Manager</h2>
+                      <p className="tab-desc">Add or update featured web apps, AI systems, and machine learning models.</p>
                     </div>
+                  </div>
 
-                    <div className="form-row">
-                      <div className="admin-field-group">
-                        <label className="admin-field-label">GITHUB PROFILE URL</label>
-                        <input
-                          type="text"
-                          className="admin-form-input"
-                          value={settingsForm.githubUrl || ''}
-                          onChange={(e) => setSettingsForm({ ...settingsForm, githubUrl: e.target.value })}
-                        />
+                  <div className="admin-cards-grid">
+                    {projects.map((proj: any) => (
+                      <div className="admin-glass-card" key={proj.id}>
+                        <div className="admin-card-header">
+                          <div className="admin-card-title-group">
+                            <span className="admin-card-badge">{proj.category || 'Web App'}</span>
+                            <h3 className="admin-card-title">{proj.title}</h3>
+                          </div>
+
+                          <div className="admin-card-actions">
+                            <button
+                              type="button"
+                              className="admin-action-btn edit"
+                              onClick={() => {
+                                setEditingItem({ type: 'project', data: proj });
+                                setIsModalOpen(true);
+                              }}
+                            >
+                              <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" strokeWidth="2.2">
+                                <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+                                <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+                              </svg>
+                              <span>Edit</span>
+                            </button>
+                            <button
+                              type="button"
+                              className="admin-action-btn delete"
+                              onClick={() => {
+                                if (window.confirm(`Delete project "${proj.title}"?`)) {
+                                  deleteItemMutation.mutate(`/projects/${proj.id}`);
+                                }
+                              }}
+                            >
+                              <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" strokeWidth="2.2">
+                                <polyline points="3 6 5 6 21 6"></polyline>
+                                <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+                              </svg>
+                              <span>Delete</span>
+                            </button>
+                          </div>
+                        </div>
+
+                        <p className="admin-card-desc">{proj.description}</p>
+
+                        <div className="admin-chips-wrap">
+                          {toArray(proj.techStack).map((t: string, i: number) => (
+                            <span className="admin-tech-chip" key={i}>{t}</span>
+                          ))}
+                        </div>
                       </div>
-                      <div className="admin-field-group">
-                        <label className="admin-field-label">LINKEDIN URL</label>
-                        <input
-                          type="text"
-                          className="admin-form-input"
-                          value={settingsForm.linkedinUrl || ''}
-                          onChange={(e) => setSettingsForm({ ...settingsForm, linkedinUrl: e.target.value })}
-                        />
-                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {/* TAB 6: INQUIRIES */}
+              {activeTab === 'inquiries' && (
+                <div className="admin-tab-content">
+                  <div className="tab-header-row">
+                    <div>
+                      <h2 className="tab-title">Client Inquiries &amp; Get In Touch</h2>
+                      <p className="tab-desc">Direct inquiries submitted via the contact pipeline.</p>
                     </div>
-
-                    <div className="form-row">
-                      <div className="admin-field-group">
-                        <label className="admin-field-label">X / TWITTER URL</label>
-                        <input
-                          type="text"
-                          className="admin-form-input"
-                          value={settingsForm.twitterUrl || ''}
-                          onChange={(e) => setSettingsForm({ ...settingsForm, twitterUrl: e.target.value })}
-                        />
-                      </div>
-                      <div className="admin-field-group">
-                        <label className="admin-field-label">INSTAGRAM URL</label>
-                        <input
-                          type="text"
-                          className="admin-form-input"
-                          value={settingsForm.instagramUrl || ''}
-                          onChange={(e) => setSettingsForm({ ...settingsForm, instagramUrl: e.target.value })}
-                        />
-                      </div>
-                    </div>
-
-                    <button type="submit" className="admin-primary-btn" style={{ marginTop: '1rem' }}>
-                      <span>Save Live Site Configuration ✦</span>
+                    <button type="button" className="refresh-btn" onClick={() => refetchInquiries()}>
+                      Refresh
                     </button>
-                  </form>
-                )}
-              </div>
-            )}
-
-            {/* TAB 8: DYNAMIC CV MANAGER */}
-            {activeTab === 'cv' && (
-              <div className="admin-tab-content">
-                <div className="tab-header-row">
-                  <div>
-                    <h2 className="tab-title">Resume / CV Drag &amp; Drop Control</h2>
-                    <p className="tab-desc">Upload, update, or remove your live resume document.</p>
                   </div>
-                  <span className={`status-pill ${cvData?.hasCv ? 'status-pill-live' : 'status-pill-empty'}`}>
-                    {cvData?.hasCv ? '● LIVE CV ATTACHED' : '○ NO CV ACTIVE'}
-                  </span>
-                </div>
 
-                {cvData?.hasCv && (
-                  <div className="active-cv-card">
-                    <div className="cv-card-details">
-                      <h4 className="cv-card-filename">{cvData.cvOriginalName || 'Resume.pdf'}</h4>
-                      <div className="cv-card-meta">
-                        <span>{cvData.cvSize ? `${(cvData.cvSize / 1024).toFixed(1)} KB` : 'PDF'}</span>
-                      </div>
+                  {inquiries.length > 0 ? (
+                    <div className="inquiries-list">
+                      {inquiries.map((msg: any) => (
+                        <div className="inquiry-card" key={msg.id}>
+                          <div className="inquiry-header">
+                            <div className="inquiry-user">
+                              <span className="inquiry-name">{msg.name}</span>
+                              <a href={`mailto:${msg.email}`} className="inquiry-email">
+                                {msg.email}
+                              </a>
+                            </div>
+                            <span className="inquiry-date">{new Date(msg.createdAt).toLocaleString()}</span>
+                          </div>
+                          {msg.subject && <h4 className="inquiry-subject">{msg.subject}</h4>}
+                          <p className="inquiry-body">{msg.message}</p>
+                        </div>
+                      ))}
                     </div>
-                    <div className="cv-card-actions">
-                      <a href={cvData.cvUrl || '#'} target="_blank" rel="noreferrer" className="cv-action-btn view-btn">
-                        Preview
-                      </a>
-                      <button
-                        type="button"
-                        className="cv-action-btn delete-btn"
-                        onClick={async () => {
-                          if (confirm('Delete active CV?')) {
-                            await api.delete('/cv', { headers: getHeaders() });
-                            toast.success('CV Deleted');
-                            refetchCv();
-                          }
-                        }}
-                      >
-                        Delete
-                      </button>
-                    </div>
-                  </div>
-                )}
-
-                <input
-                  type="file"
-                  ref={fileInputRef}
-                  onChange={(e) => e.target.files?.[0] && processFile(e.target.files[0])}
-                  accept=".pdf,.doc,.docx"
-                  style={{ display: 'none' }}
-                />
-
-                <div
-                  className={`admin-dropzone ${isDragging ? 'dropzone-active' : ''}`}
-                  onDragOver={(e) => { e.preventDefault(); setIsDragging(true); }}
-                  onDragLeave={() => setIsDragging(false)}
-                  onDrop={handleDrop}
-                  onClick={() => fileInputRef.current?.click()}
-                >
-                  <div className="dropzone-text">
-                    <h4 className="dropzone-headline">Drag &amp; Drop New CV Document</h4>
-                    <p className="dropzone-subheadline">PDF or Word (.pdf, .docx) • Instant Live Sync</p>
-                  </div>
-                  <button type="button" className="dropzone-browse-btn">Browse Local Files</button>
-                  {uploadProgress !== null && (
-                    <div className="dropzone-progress-wrap">
-                      <span className="progress-text">{uploadProgress}% Uploading...</span>
+                  ) : (
+                    <div className="cv-empty-banner">
+                      <p>No inquiries received yet.</p>
                     </div>
                   )}
                 </div>
-              </div>
-            )}
+              )}
+
+              {/* TAB 7: SITE & CONTACT SETTINGS */}
+              {activeTab === 'settings' && (
+                <div className="admin-tab-content">
+                  <div className="tab-header-row">
+                    <div>
+                      <h2 className="tab-title">Site Configuration &amp; Contact Channels</h2>
+                      <p className="tab-desc">Changes here update the Hero, Footer, Visiting Card, and Navbar in real-time.</p>
+                    </div>
+                  </div>
+
+                  {settingsForm && (
+                    <form className="settings-edit-form" onSubmit={handleSettingsSubmit}>
+                      <div className="form-row">
+                        <div className="admin-field-group">
+                          <label className="admin-field-label">PORTFOLIO TITLE / NAME</label>
+                          <input
+                            type="text"
+                            className="admin-form-input"
+                            value={settingsForm.title || ''}
+                            onChange={(e) => setSettingsForm({ ...settingsForm, title: e.target.value })}
+                          />
+                        </div>
+                        <div className="admin-field-group">
+                          <label className="admin-field-label">AVAILABILITY STATUS</label>
+                          <select
+                            className="admin-form-input"
+                            value={settingsForm.isAvailable ? 'true' : 'false'}
+                            onChange={(e) => setSettingsForm({ ...settingsForm, isAvailable: e.target.value === 'true' })}
+                          >
+                            <option value="true">Available for Projects (Green Dot)</option>
+                            <option value="false">Busy / In High Demand (Red Dot)</option>
+                          </select>
+                        </div>
+                      </div>
+
+                      <div className="form-row">
+                        <div className="admin-field-group">
+                          <label className="admin-field-label">CONTACT EMAIL</label>
+                          <input
+                            type="email"
+                            className="admin-form-input"
+                            value={settingsForm.contactEmail || ''}
+                            onChange={(e) => setSettingsForm({ ...settingsForm, contactEmail: e.target.value })}
+                          />
+                        </div>
+                        <div className="admin-field-group">
+                          <label className="admin-field-label">PHONE NUMBER</label>
+                          <input
+                            type="text"
+                            className="admin-form-input"
+                            value={settingsForm.contactPhone || ''}
+                            onChange={(e) => setSettingsForm({ ...settingsForm, contactPhone: e.target.value })}
+                          />
+                        </div>
+                      </div>
+
+                      <div className="form-row">
+                        <div className="admin-field-group">
+                          <label className="admin-field-label">GITHUB PROFILE URL</label>
+                          <input
+                            type="text"
+                            className="admin-form-input"
+                            value={settingsForm.githubUrl || ''}
+                            onChange={(e) => setSettingsForm({ ...settingsForm, githubUrl: e.target.value })}
+                          />
+                        </div>
+                        <div className="admin-field-group">
+                          <label className="admin-field-label">LINKEDIN URL</label>
+                          <input
+                            type="text"
+                            className="admin-form-input"
+                            value={settingsForm.linkedinUrl || ''}
+                            onChange={(e) => setSettingsForm({ ...settingsForm, linkedinUrl: e.target.value })}
+                          />
+                        </div>
+                      </div>
+
+                      <button type="submit" className="admin-primary-btn" style={{ width: 'fit-content', padding: '0 32px' }}>
+                        <span>Save Settings Live ✦</span>
+                      </button>
+                    </form>
+                  )}
+                </div>
+              )}
+
+              {/* TAB 8: CV / RESUME MANAGER */}
+              {activeTab === 'cv' && (
+                <div className="admin-tab-content">
+                  <div className="tab-header-row">
+                    <div>
+                      <h2 className="tab-title">Cloudinary Dynamic CV Manager</h2>
+                      <p className="tab-desc">Upload, inspect, and manage your official PDF resume.</p>
+                    </div>
+                  </div>
+
+                  {cvData?.hasCv && cvData.cvUrl ? (
+                    <div className="cv-active-card">
+                      <div className="cv-card-meta">
+                        <div className="cv-icon-badge">
+                          <svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="currentColor" strokeWidth="2">
+                            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                            <polyline points="14 2 14 8 20 8"></polyline>
+                          </svg>
+                        </div>
+                        <div>
+                          <h3 className="cv-filename">{cvData.cvOriginalName || 'Md_Samim_Resume.pdf'}</h3>
+                          <span className="cv-timestamp">Synced via Cloudinary • Ready for instant download</span>
+                        </div>
+                      </div>
+
+                      <div className="cv-button-group">
+                        <a href={cvData.cvUrl} target="_blank" rel="noopener noreferrer" className="cv-action-btn view-btn">
+                          View PDF
+                        </a>
+                        <button
+                          type="button"
+                          className="cv-action-btn delete-btn"
+                          onClick={async () => {
+                            if (window.confirm('Are you sure you want to remove the current CV?')) {
+                              await api.delete('/cv', { headers: getHeaders() });
+                              toast.success('CV Removed');
+                              queryClient.invalidateQueries({ queryKey: ['cv'] });
+                            }
+                          }}
+                        >
+                          Delete
+                        </button>
+                      </div>
+                    </div>
+                  ) : (
+                    <div className="cv-empty-banner">
+                      <p>No active resume uploaded. Upload below to activate the download button on the homepage.</p>
+                    </div>
+                  )}
+
+                  <input
+                    type="file"
+                    ref={fileInputRef}
+                    onChange={(e) => e.target.files?.[0] && processFile(e.target.files[0])}
+                    accept=".pdf,.doc,.docx"
+                    style={{ display: 'none' }}
+                  />
+
+                  <div
+                    className={`admin-dropzone ${isDragging ? 'dropzone-active' : ''}`}
+                    onDragOver={(e) => { e.preventDefault(); setIsDragging(true); }}
+                    onDragLeave={() => setIsDragging(false)}
+                    onDrop={handleDrop}
+                    onClick={() => fileInputRef.current?.click()}
+                  >
+                    <div className="dropzone-text">
+                      <h4 className="dropzone-headline">Drag &amp; Drop New CV Document</h4>
+                      <p className="dropzone-subheadline">PDF or Word (.pdf, .docx) • Instant Live Sync</p>
+                    </div>
+                    <button type="button" className="dropzone-browse-btn">Browse Local Files</button>
+                    {uploadProgress !== null && (
+                      <div className="dropzone-progress-wrap">
+                        <span className="progress-text">{uploadProgress}% Uploading...</span>
+                      </div>
+                    )}
+                  </div>
+                </div>
+              )}
             </div>
           </div>
         </div>
@@ -1286,11 +1251,14 @@ export default function AdminDashboard() {
          GENERIC EDITING MODAL (FOR SERVICES, COURSES, EXP, EDU, PROJECTS)
          ========================================================================== */}
       {isModalOpen && editingItem && (
-        <div className="card-modal-backdrop active" onClick={() => setIsModalOpen(false)}>
-          <div className="visiting-card-container admin-crud-modal" onClick={(e) => e.stopPropagation()} style={{ maxWidth: '680px', maxHeight: '88vh', overflowY: 'auto' }}>
-            <div className="visiting-card-top-bar">
-              <span className="card-top-tag">{editingItem.data.id ? 'EDIT RECORD' : 'CREATE NEW RECORD'} ✦ {editingItem.type.toUpperCase()}</span>
-              <button type="button" className="card-modal-close" onClick={() => setIsModalOpen(false)}>✕</button>
+        <div className="admin-modal-overlay" onClick={() => setIsModalOpen(false)}>
+          <div className="admin-modal-window" onClick={(e) => e.stopPropagation()}>
+            <div className="admin-modal-header">
+              <div className="modal-header-tag">
+                <span className="modal-dot"></span>
+                <span>{editingItem.data.id ? 'EDIT RECORD' : 'CREATE NEW RECORD'} • {editingItem.type.toUpperCase()}</span>
+              </div>
+              <button type="button" className="admin-modal-close" onClick={() => setIsModalOpen(false)}>✕</button>
             </div>
 
             <form
@@ -1312,14 +1280,14 @@ export default function AdminDashboard() {
                   data: editingItem.data
                 });
               }}
-              style={{ padding: '1.5rem', display: 'flex', flexDirection: 'column', gap: '1rem' }}
+              className="admin-modal-form"
             >
               {/* Form Fields for Service */}
               {editingItem.type === 'service' && (
                 <>
                   <div className="form-row">
                     <div className="admin-field-group">
-                      <label className="admin-field-label">NUMBER</label>
+                      <label className="admin-field-label">NUMBER (e.g. 01)</label>
                       <input
                         type="text"
                         className="admin-form-input"
@@ -1353,7 +1321,7 @@ export default function AdminDashboard() {
                     <label className="admin-field-label">OVERVIEW / DESCRIPTION</label>
                     <textarea
                       rows={3}
-                      className="admin-form-input"
+                      className="admin-form-input admin-form-textarea"
                       value={editingItem.data.overview || ''}
                       onChange={(e) => setEditingItem({ ...editingItem, data: { ...editingItem.data, overview: e.target.value } })}
                       required
@@ -1364,7 +1332,7 @@ export default function AdminDashboard() {
                     <input
                       type="text"
                       className="admin-form-input"
-                      value={Array.isArray(editingItem.data.tags) ? editingItem.data.tags.join(', ') : ''}
+                      value={Array.isArray(editingItem.data.tags) ? editingItem.data.tags.join(', ') : (editingItem.data.tags || '')}
                       onChange={(e) => setEditingItem({ ...editingItem, data: { ...editingItem.data, tags: e.target.value.split(',').map((s: string) => s.trim()).filter(Boolean) } })}
                     />
                   </div>
@@ -1418,7 +1386,7 @@ export default function AdminDashboard() {
                     <label className="admin-field-label">DESCRIPTION</label>
                     <textarea
                       rows={3}
-                      className="admin-form-input"
+                      className="admin-form-input admin-form-textarea"
                       value={editingItem.data.description || ''}
                       onChange={(e) => setEditingItem({ ...editingItem, data: { ...editingItem.data, description: e.target.value } })}
                       required
@@ -1429,7 +1397,7 @@ export default function AdminDashboard() {
                     <input
                       type="text"
                       className="admin-form-input"
-                      value={Array.isArray(editingItem.data.topics) ? editingItem.data.topics.join(', ') : ''}
+                      value={Array.isArray(editingItem.data.topics) ? editingItem.data.topics.join(', ') : (editingItem.data.topics || '')}
                       onChange={(e) => setEditingItem({ ...editingItem, data: { ...editingItem.data, topics: e.target.value.split(',').map((s: string) => s.trim()).filter(Boolean) } })}
                     />
                   </div>
@@ -1487,18 +1455,9 @@ export default function AdminDashboard() {
                     <label className="admin-field-label">BULLETS (ONE PER LINE)</label>
                     <textarea
                       rows={4}
-                      className="admin-form-input"
-                      value={Array.isArray(editingItem.data.bullets) ? editingItem.data.bullets.join('\n') : ''}
+                      className="admin-form-input admin-form-textarea"
+                      value={Array.isArray(editingItem.data.bullets) ? editingItem.data.bullets.join('\n') : (editingItem.data.bullets || '')}
                       onChange={(e) => setEditingItem({ ...editingItem, data: { ...editingItem.data, bullets: e.target.value.split('\n').map((s: string) => s.trim()).filter(Boolean) } })}
-                    />
-                  </div>
-                  <div className="admin-field-group">
-                    <label className="admin-field-label">TECH STACK (COMMA SEPARATED)</label>
-                    <input
-                      type="text"
-                      className="admin-form-input"
-                      value={Array.isArray(editingItem.data.techStack) ? editingItem.data.techStack.join(', ') : ''}
-                      onChange={(e) => setEditingItem({ ...editingItem, data: { ...editingItem.data, techStack: e.target.value.split(',').map((s: string) => s.trim()).filter(Boolean) } })}
                     />
                   </div>
                 </>
@@ -1576,30 +1535,21 @@ export default function AdminDashboard() {
                       />
                     </div>
                     <div className="admin-field-group">
-                      <label className="admin-field-label">BADGE TAG</label>
+                      <label className="admin-field-label">STEP TITLE</label>
                       <input
                         type="text"
                         className="admin-form-input"
-                        value={editingItem.data.badge || ''}
-                        onChange={(e) => setEditingItem({ ...editingItem, data: { ...editingItem.data, badge: e.target.value } })}
+                        value={editingItem.data.title || ''}
+                        onChange={(e) => setEditingItem({ ...editingItem, data: { ...editingItem.data, title: e.target.value } })}
+                        required
                       />
                     </div>
-                  </div>
-                  <div className="admin-field-group">
-                    <label className="admin-field-label">STEP TITLE</label>
-                    <input
-                      type="text"
-                      className="admin-form-input"
-                      value={editingItem.data.title || ''}
-                      onChange={(e) => setEditingItem({ ...editingItem, data: { ...editingItem.data, title: e.target.value } })}
-                      required
-                    />
                   </div>
                   <div className="admin-field-group">
                     <label className="admin-field-label">DESCRIPTION</label>
                     <textarea
                       rows={3}
-                      className="admin-form-input"
+                      className="admin-form-input admin-form-textarea"
                       value={editingItem.data.description || ''}
                       onChange={(e) => setEditingItem({ ...editingItem, data: { ...editingItem.data, description: e.target.value } })}
                       required
@@ -1655,7 +1605,7 @@ export default function AdminDashboard() {
                     <label className="admin-field-label">DESCRIPTION</label>
                     <textarea
                       rows={3}
-                      className="admin-form-input"
+                      className="admin-form-input admin-form-textarea"
                       value={editingItem.data.description || ''}
                       onChange={(e) => setEditingItem({ ...editingItem, data: { ...editingItem.data, description: e.target.value } })}
                       required
@@ -1666,21 +1616,29 @@ export default function AdminDashboard() {
                     <input
                       type="text"
                       className="admin-form-input"
-                      value={Array.isArray(editingItem.data.techStack) ? editingItem.data.techStack.join(', ') : ''}
+                      value={Array.isArray(editingItem.data.techStack) ? editingItem.data.techStack.join(', ') : (editingItem.data.techStack || '')}
                       onChange={(e) => setEditingItem({ ...editingItem, data: { ...editingItem.data, techStack: e.target.value.split(',').map((s: string) => s.trim()).filter(Boolean) } })}
                     />
                   </div>
                 </>
               )}
 
-              <button
-                type="submit"
-                className="admin-primary-btn"
-                disabled={saveMutation.isPending}
-                style={{ marginTop: '1rem' }}
-              >
-                <span>{saveMutation.isPending ? 'Saving...' : 'Save Changes ✦'}</span>
-              </button>
+              <div className="admin-modal-footer">
+                <button
+                  type="button"
+                  className="admin-btn-secondary"
+                  onClick={() => setIsModalOpen(false)}
+                >
+                  Cancel
+                </button>
+                <button
+                  type="submit"
+                  className="admin-primary-btn modal-save-btn"
+                  disabled={saveMutation.isPending}
+                >
+                  <span>{saveMutation.isPending ? 'Saving...' : 'Save Changes ✦'}</span>
+                </button>
+              </div>
             </form>
           </div>
         </div>
