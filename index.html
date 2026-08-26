@@ -1,0 +1,1447 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Md. Samim — AI &amp; Backend Engineering Specialist</title>
+  <meta name="description" content="Portfolio of Md. Samim, AI &amp; Backend Engineering Specialist architecting scalable, intelligent, and high-performance systems.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Italiana&family=Playfair+Display:ital,wght@0,400;0,600;1,400;1,600&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&family=Alex+Brush&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <!-- Preloader -->
+  <div id="loader" class="loader">
+    <div class="loader-content">
+      <div class="loader-spinner"></div>
+      <div class="loader-title">MD. SAMIM</div>
+      <div class="loader-text">Loading Experience <span id="load-progress">0%</span></div>
+    </div>
+  </div>
+
+  <!-- Background Animated Canvas Container (Synchronized to Scroll) -->
+  <div class="canvas-background-container">
+    <canvas id="hero-canvas"></canvas>
+    <div class="canvas-overlay-gradient"></div>
+  </div>
+
+  <!-- Floating Transparent Glassmorphism Header -->
+  <header class="floating-navbar" id="navbar">
+    <a href="#hero" class="nav-brand" title="Scroll to Home">
+      <div class="brand-logo-box">
+        <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor">
+          <path d="M12 2L2.5 21h4.8l2.2-4.8h5l2.2 4.8h4.8L12 2zm-1.1 12.2L12 9.4l1.1 4.8h-2.2z"/>
+        </svg>
+      </div>
+      <div class="brand-details">
+        <span class="brand-name">Md. Samim</span>
+        <span class="brand-role">AI &amp; Backend Specialist</span>
+      </div>
+    </a>
+
+    <nav class="nav-menu">
+      <a href="#skills" class="nav-item">Skills</a>
+      <a href="#education" class="nav-item">Education</a>
+      <a href="#projects" class="nav-item">Projects</a>
+      <a href="#experience" class="nav-item">Experience</a>
+      <a href="#courses" class="nav-item">Courses</a>
+      <a href="#services" class="nav-item">Services</a>
+    </nav>
+
+    <div class="nav-action">
+      <a href="#contact" class="nav-talk-btn">
+        <span class="nav-status-pulse"></span>
+        <span>Let's Talk</span>
+        <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.5" class="arrow-up-right">
+          <line x1="7" y1="17" x2="17" y2="7"></line>
+          <polyline points="7 7 17 7 17 17"></polyline>
+        </svg>
+      </a>
+    </div>
+  </header>
+
+  <!-- Main Website Content Structure -->
+  <main class="page-wrapper">
+
+    <!-- Hero Section (Home) -->
+    <section class="hero-section" id="hero">
+      <div class="hero-title-container">
+        <h1 class="hero-giant-title">PORTFOLIO</h1>
+      </div>
+
+      <div class="hero-content-grid">
+        <!-- Hero Left Column -->
+        <div class="hero-col hero-col-left">
+          <div class="hero-tagline-container">
+            <div class="tagline-eyebrow">
+              <span class="eyebrow-line"></span>
+              <span class="eyebrow-text">SYSTEMS &amp; INTELLIGENCE</span>
+            </div>
+            <h2 class="hero-tagline">
+              <span class="tagline-primary">AI &amp; BACKEND</span>
+              <span class="tagline-secondary">
+                <span class="tagline-highlight">ENGINEERING</span>
+                <span class="tagline-serif-italic">Specialist</span>
+              </span>
+            </h2>
+          </div>
+
+          <div class="hero-badge-wrap">
+            <div class="pill-badge available-badge">
+              <span class="status-dot"></span>
+              AVAILABLE FOR PROJECTS
+              <span class="sparkle">✦</span>
+            </div>
+          </div>
+
+          <!-- Hero Action Buttons: View Portfolio & Download CV -->
+          <div class="hero-cta-group">
+            <a href="#projects" class="btn-primary">
+              <span>VIEW PORTFOLIO</span>
+              <span class="sparkle">✦</span>
+            </a>
+            <a href="#contact" class="btn-secondary" id="download-cv-btn" download>
+              <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" class="btn-icon">
+                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                <polyline points="7 10 12 15 17 10"></polyline>
+                <line x1="12" y1="15" x2="12" y2="3"></line>
+              </svg>
+              <span>DOWNLOAD CV</span>
+            </a>
+          </div>
+        </div>
+
+        <!-- Hero Center Spacer for Character Animation -->
+        <div class="hero-col hero-col-center"></div>
+
+        <!-- Hero Right Column (Ultra-Minimalist Executive Bio + Social Links) -->
+        <div class="hero-col hero-col-right">
+          <div class="hero-bio-card">
+            <p class="hero-bio-text">
+              Hi, I'm <strong class="hero-highlight">Md. Samim</strong> — an <strong>AI &amp; Backend Engineer</strong> building scalable backends, high-performance web systems, and autonomous AI workflows.
+            </p>
+          </div>
+
+          <!-- Follow Me Social Links (Matching User Reference) -->
+          <div class="hero-social-wrap">
+            <span class="hero-social-label">Follow Me On</span>
+            <div class="hero-social-icons">
+              <!-- GitHub -->
+              <a href="https://github.com/MdShamim5669" target="_blank" rel="noopener" class="hero-social-circle" aria-label="GitHub">
+                <svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor">
+                  <path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0 0 24 12c0-6.63-5.37-12-12-12z"/>
+                </svg>
+              </a>
+
+              <!-- X / Twitter -->
+              <a href="https://x.com" target="_blank" rel="noopener" class="hero-social-circle" aria-label="X (Twitter)">
+                <svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor">
+                  <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
+                </svg>
+              </a>
+
+              <!-- LinkedIn -->
+              <a href="https://linkedin.com" target="_blank" rel="noopener" class="hero-social-circle" aria-label="LinkedIn">
+                <svg viewBox="0 0 24 24" width="15" height="15" fill="currentColor">
+                  <path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"/>
+                </svg>
+              </a>
+
+              <!-- Instagram -->
+              <a href="https://instagram.com" target="_blank" rel="noopener" class="hero-social-circle" aria-label="Instagram">
+                <svg viewBox="0 0 24 24" width="15" height="15" fill="currentColor">
+                  <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/>
+                </svg>
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="scroll-indicator">
+        <span class="scroll-text">SCROLL TO EXPLORE</span>
+        <div class="scroll-line"></div>
+      </div>
+    </section>
+
+    <!-- Skills & Competencies Section (Clean Lead Engineer Matrix) -->
+    <!-- Skills & Competencies Section (Pure Infinite Logo Headlines Loop) -->
+    <section class="skills-section" id="skills">
+      <div class="section-header">
+        <div class="section-title">
+          <span>SKILLS &amp; COMPETENCIES</span>
+          <span class="sparkle">✦</span>
+        </div>
+        <span class="section-tag">TECHNICAL ARSENAL</span>
+      </div>
+
+      <!-- Skills Infinite Marquee Track (Sequential Tech Logos) -->
+      <div class="skills-marquee-container">
+        <div class="skills-marquee-track">
+          <!-- Set 1 -->
+          <div class="skill-pill-box" title="Claude 3.5 Sonnet">
+            <img src="tech-logos/claude-ai.png" alt="Claude AI" class="skill-logo-img">
+            <span class="skill-logo-name">Claude AI</span>
+          </div>
+          <div class="skill-pill-box" title="Next.js 14">
+            <img src="tech-logos/nextjs.png" alt="Next.js" class="skill-logo-img">
+            <span class="skill-logo-name">Next.js</span>
+          </div>
+          <div class="skill-pill-box" title="React.js">
+            <img src="tech-logos/reactjs.png" alt="React.js" class="skill-logo-img">
+            <span class="skill-logo-name">React.js</span>
+          </div>
+          <div class="skill-pill-box" title="TypeScript">
+            <img src="tech-logos/typescript.png" alt="TypeScript" class="skill-logo-img">
+            <span class="skill-logo-name">TypeScript</span>
+          </div>
+          <div class="skill-pill-box" title="Node.js">
+            <img src="tech-logos/nodejs.png" alt="Node.js" class="skill-logo-img">
+            <span class="skill-logo-name">Node.js</span>
+          </div>
+          <div class="skill-pill-box" title="Express.js">
+            <img src="tech-logos/expressjs.png" alt="Express.js" class="skill-logo-img">
+            <span class="skill-logo-name">Express.js</span>
+          </div>
+          <div class="skill-pill-box" title="PostgreSQL">
+            <img src="tech-logos/postgresql.png" alt="PostgreSQL" class="skill-logo-img">
+            <span class="skill-logo-name">PostgreSQL</span>
+          </div>
+          <div class="skill-pill-box" title="Prisma ORM">
+            <img src="tech-logos/prisma.png" alt="Prisma" class="skill-logo-img">
+            <span class="skill-logo-name">Prisma ORM</span>
+          </div>
+          <div class="skill-pill-box" title="Python">
+            <img src="tech-logos/python.png" alt="Python" class="skill-logo-img">
+            <span class="skill-logo-name">Python</span>
+          </div>
+          <div class="skill-pill-box" title="PyTorch">
+            <img src="tech-logos/pytorch.png" alt="PyTorch" class="skill-logo-img">
+            <span class="skill-logo-name">PyTorch</span>
+          </div>
+          <div class="skill-pill-box" title="Cloudinary">
+            <img src="tech-logos/cloudinary.png" alt="Cloudinary" class="skill-logo-img">
+            <span class="skill-logo-name">Cloudinary</span>
+          </div>
+          <div class="skill-pill-box" title="JavaScript">
+            <img src="tech-logos/javascript.png" alt="JavaScript" class="skill-logo-img">
+            <span class="skill-logo-name">JavaScript</span>
+          </div>
+
+          <!-- Set 2 (Duplicate for Seamless Infinite Marquee Loop) -->
+          <div class="skill-pill-box" title="Claude 3.5 Sonnet">
+            <img src="tech-logos/claude-ai.png" alt="Claude AI" class="skill-logo-img">
+            <span class="skill-logo-name">Claude AI</span>
+          </div>
+          <div class="skill-pill-box" title="Next.js 14">
+            <img src="tech-logos/nextjs.png" alt="Next.js" class="skill-logo-img">
+            <span class="skill-logo-name">Next.js</span>
+          </div>
+          <div class="skill-pill-box" title="React.js">
+            <img src="tech-logos/reactjs.png" alt="React.js" class="skill-logo-img">
+            <span class="skill-logo-name">React.js</span>
+          </div>
+          <div class="skill-pill-box" title="TypeScript">
+            <img src="tech-logos/typescript.png" alt="TypeScript" class="skill-logo-img">
+            <span class="skill-logo-name">TypeScript</span>
+          </div>
+          <div class="skill-pill-box" title="Node.js">
+            <img src="tech-logos/nodejs.png" alt="Node.js" class="skill-logo-img">
+            <span class="skill-logo-name">Node.js</span>
+          </div>
+          <div class="skill-pill-box" title="Express.js">
+            <img src="tech-logos/expressjs.png" alt="Express.js" class="skill-logo-img">
+            <span class="skill-logo-name">Express.js</span>
+          </div>
+          <div class="skill-pill-box" title="PostgreSQL">
+            <img src="tech-logos/postgresql.png" alt="PostgreSQL" class="skill-logo-img">
+            <span class="skill-logo-name">PostgreSQL</span>
+          </div>
+          <div class="skill-pill-box" title="Prisma ORM">
+            <img src="tech-logos/prisma.png" alt="Prisma" class="skill-logo-img">
+            <span class="skill-logo-name">Prisma ORM</span>
+          </div>
+          <div class="skill-pill-box" title="Python">
+            <img src="tech-logos/python.png" alt="Python" class="skill-logo-img">
+            <span class="skill-logo-name">Python</span>
+          </div>
+          <div class="skill-pill-box" title="PyTorch">
+            <img src="tech-logos/pytorch.png" alt="PyTorch" class="skill-logo-img">
+            <span class="skill-logo-name">PyTorch</span>
+          </div>
+          <div class="skill-pill-box" title="Cloudinary">
+            <img src="tech-logos/cloudinary.png" alt="Cloudinary" class="skill-logo-img">
+            <span class="skill-logo-name">Cloudinary</span>
+          </div>
+          <div class="skill-pill-box" title="JavaScript">
+            <img src="tech-logos/javascript.png" alt="JavaScript" class="skill-logo-img">
+            <span class="skill-logo-name">JavaScript</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Education & Work Process Section (Matching User Reference Demo) -->
+    <section class="education-section" id="education">
+      <div class="section-header">
+        <div class="section-title">
+          <span>EDUCATION &amp; PROCESS</span>
+          <span class="sparkle">✦</span>
+        </div>
+        <span class="section-tag">ACADEMIC &amp; WORKFLOW</span>
+      </div>
+
+      <div class="edu-process-container">
+        <!-- Left Side: EDUCATION (Matching Reference Image 2) -->
+        <div class="edu-column">
+          <div class="column-tag-header">
+            <span class="tag-red">EDUCATION</span>
+          </div>
+
+          <div class="edu-timeline-list">
+            <!-- Entry 1 -->
+            <div class="edu-item">
+              <div class="edu-item-header">
+                <h4 class="edu-item-title">B.Sc. in Computer Science &amp; Engineering</h4>
+                <span class="edu-item-year">2022-26</span>
+              </div>
+              <p class="edu-item-sub">AI &amp; Machine Learning | Backend Engineering | Distributed Systems</p>
+              <p class="edu-item-desc">Daffodil International University · Core Engineering Major</p>
+            </div>
+
+            <!-- Entry 2 -->
+            <div class="edu-item">
+              <div class="edu-item-header">
+                <h4 class="edu-item-title">Higher Secondary Certificate (HSC) — Science</h4>
+                <span class="edu-item-year">2020-22</span>
+              </div>
+              <p class="edu-item-sub">Physics | Chemistry | Higher Mathematics | Analytical Computing</p>
+              <p class="edu-item-desc">Science &amp; Information Technology Track</p>
+            </div>
+
+            <!-- Skills / Coursework -->
+            <div class="edu-item-skills">
+              <span class="tag-red mini-tag">CORE COURSEWORK &amp; SKILLS</span>
+              <p class="edu-skills-line">
+                Data Structures | Algorithms | DBMS | Software Engineering | AI &amp; ML | Operating Systems | Computer Networks
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Middle: Glowing Animated Scroll Timeline Track -->
+        <div class="edu-middle-timeline" id="edu-middle-timeline">
+          <div class="timeline-glow-line">
+            <div class="timeline-progress-fill"></div>
+          </div>
+          <div class="timeline-glowing-beacon">
+            <div class="beacon-ring"></div>
+            <div class="beacon-core"></div>
+          </div>
+        </div>
+
+        <!-- Right Side: WORK PROCESS (Matching Reference Image 1) -->
+        <div class="process-column">
+          <div class="column-tag-header">
+            <span class="tag-white">WORK PROCESS</span>
+          </div>
+
+          <div class="wp-timeline-track">
+            <!-- Step 1: Plan -->
+            <div class="wp-item">
+              <div class="wp-node">
+                <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="1.8">
+                  <path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"></path>
+                  <rect x="8" y="2" width="8" height="4" rx="1" ry="1"></rect>
+                </svg>
+              </div>
+              <div class="wp-content">
+                <h5 class="wp-name">Plan</h5>
+                <p class="wp-sub">Architecture &amp; Flow</p>
+              </div>
+            </div>
+
+            <!-- Step 2: Design -->
+            <div class="wp-item">
+              <div class="wp-node">
+                <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="1.8">
+                  <path d="M12 19l7-7 3 3-7 7-3-3z"></path>
+                  <path d="M18 13l-1.5-7.5L2 2l3.5 14.5L13 18l5-5z"></path>
+                  <path d="M2 2l7.586 7.586"></path>
+                  <circle cx="11" cy="11" r="2"></circle>
+                </svg>
+              </div>
+              <div class="wp-content">
+                <h5 class="wp-name">Design</h5>
+                <p class="wp-sub">UI / UX &amp; Wireframes</p>
+              </div>
+            </div>
+
+            <!-- Step 3: Frontend -->
+            <div class="wp-item">
+              <div class="wp-node">
+                <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="1.8">
+                  <polyline points="16 18 22 12 16 6"></polyline>
+                  <polyline points="8 6 2 12 8 18"></polyline>
+                </svg>
+              </div>
+              <div class="wp-content">
+                <h5 class="wp-name">Frontend</h5>
+                <p class="wp-sub">React &amp; Next.js UI</p>
+              </div>
+            </div>
+
+            <!-- Step 4: Backend -->
+            <div class="wp-item">
+              <div class="wp-node">
+                <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="1.8">
+                  <rect x="2" y="2" width="20" height="8" rx="2"></rect>
+                  <rect x="2" y="14" width="20" height="8" rx="2"></rect>
+                  <line x1="6" y1="6" x2="6.01" y2="6"></line>
+                  <line x1="6" y1="18" x2="6.01" y2="18"></line>
+                </svg>
+              </div>
+              <div class="wp-content">
+                <h5 class="wp-name">Backend</h5>
+                <p class="wp-sub">APIs &amp; Databases</p>
+              </div>
+            </div>
+
+            <!-- Step 5: Test -->
+            <div class="wp-item">
+              <div class="wp-node">
+                <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="1.8">
+                  <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+                  <polyline points="9 12 11 14 15 10"></polyline>
+                </svg>
+              </div>
+              <div class="wp-content">
+                <h5 class="wp-name">Testing</h5>
+                <p class="wp-sub">QA &amp; Optimization</p>
+              </div>
+            </div>
+
+            <!-- Step 6: Deploy -->
+            <div class="wp-item">
+              <div class="wp-node">
+                <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="1.8">
+                  <path d="M4.5 16.5c-1.5 1.26-2 5-2 5s3.74-.5 5-2c.71-.84.7-2.13-.09-2.91a2.18 2.18 0 0 0-2.91-.09z"></path>
+                  <path d="m12 15-3-3a22 22 0 0 1 2-3.95A12.88 12.88 0 0 1 22 2c0 2.72-.78 7.5-6 11a22.35 22.35 0 0 1-4 2z"></path>
+                </svg>
+              </div>
+              <div class="wp-content">
+                <h5 class="wp-name">Deploy</h5>
+                <p class="wp-sub">Cloud &amp; Launch</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Selected Projects Section -->
+    <section class="projects-section" id="projects">
+      <div class="section-header">
+        <div class="section-title">
+          <span>SELECTED PROJECTS</span>
+          <span class="sparkle">✦</span>
+        </div>
+        <a href="#projects" class="section-link">
+          <span>VIEW ALL PROJECTS</span>
+          <span class="arrow">⟶</span>
+        </a>
+      </div>
+
+      <div class="projects-grid">
+        <!-- Project 1 -->
+        <article class="project-card" data-project="1">
+          <div class="project-meta">
+            <span class="project-num">01</span>
+            <div class="project-titles">
+              <h3 class="project-name">MEAL MANAGER</h3>
+              <p class="project-category">Full-Stack Mess &amp; Expense System</p>
+            </div>
+          </div>
+          <div class="project-preview preview-velvet">
+            <div class="preview-inner">
+              <div class="preview-backdrop"></div>
+              <div class="preview-mockup">
+                <div class="mockup-header">
+                  <span class="mockup-title">Smart Real-Time Expense Tracking</span>
+                </div>
+                <div class="mockup-body">
+                  <div class="mockup-image velvet-img"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="project-tags">
+            <span class="tag">REACT</span>
+            <span class="tag">NODE.JS</span>
+            <span class="tag">POSTGRESQL</span>
+          </div>
+        </article>
+
+        <!-- Project 2 -->
+        <article class="project-card" data-project="2">
+          <div class="project-meta">
+            <span class="project-num">02</span>
+            <div class="project-titles">
+              <h3 class="project-name">AI AGENT ENGINE</h3>
+              <p class="project-category">Autonomous Workflow Pipeline</p>
+            </div>
+          </div>
+          <div class="project-preview preview-aurora">
+            <div class="preview-inner">
+              <div class="preview-backdrop"></div>
+              <div class="preview-mockup">
+                <div class="mockup-header">
+                  <span class="mockup-title">Multi-Agent Intelligence System</span>
+                </div>
+                <div class="mockup-body">
+                  <div class="mockup-image aurora-img"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="project-tags">
+            <span class="tag">PYTHON</span>
+            <span class="tag">PYTORCH</span>
+            <span class="tag">LANGCHAIN</span>
+          </div>
+        </article>
+
+        <!-- Project 3 -->
+        <article class="project-card" data-project="3">
+          <div class="project-meta">
+            <span class="project-num">03</span>
+            <div class="project-titles">
+              <h3 class="project-name">NEURAL CLOUD</h3>
+              <p class="project-category">Distributed API Gateway</p>
+            </div>
+          </div>
+          <div class="project-preview preview-mindspace">
+            <div class="preview-inner">
+              <div class="preview-backdrop"></div>
+              <div class="preview-mockup">
+                <div class="mockup-header">
+                  <span class="mockup-title">High-Concurrency Microservices</span>
+                </div>
+                <div class="mockup-body">
+                  <div class="mockup-arch"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="project-tags">
+            <span class="tag">REDIS</span>
+            <span class="tag">WEBSOCKETS</span>
+            <span class="tag">DOCKER</span>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <!-- Work Experience Section (Matching User Reference Content) -->
+    <section class="experience-section" id="experience">
+      <div class="section-header">
+        <div class="section-title">
+          <span>WORK EXPERIENCE</span>
+          <span class="sparkle">✦</span>
+        </div>
+        <span class="section-tag">PROFESSIONAL JOURNEY</span>
+      </div>
+
+      <div class="experience-container">
+        <!-- Timeline Spine with Glowing Neon Scroll Beacon -->
+        <div class="exp-timeline-track" id="exp-timeline-track">
+          <div class="exp-timeline-spine">
+            <div class="exp-progress-fill"></div>
+          </div>
+          <div class="exp-glowing-beacon">
+            <div class="beacon-ring"></div>
+            <div class="beacon-core"></div>
+          </div>
+        </div>
+
+        <!-- Experience Cards Column (Right & Left Alternating Stack) -->
+        <div class="exp-cards-column" id="exp-cards-column">
+          <!-- Experience Card 1: Right Side -->
+          <article class="experience-card card-right">
+            <div class="exp-card-header">
+              <div class="exp-date-pill">
+                <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2">
+                  <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+                  <line x1="16" y1="2" x2="16" y2="6"></line>
+                  <line x1="8" y1="2" x2="8" y2="6"></line>
+                  <line x1="3" y1="10" x2="21" y2="10"></line>
+                </svg>
+                <span>2023 – Present</span>
+              </div>
+              <span class="exp-company-badge">ALGORIZIN</span>
+            </div>
+
+            <h3 class="exp-role-title">AI Curriculum Developer &amp; Technical Author</h3>
+            <p class="exp-role-description">
+              Remote • Contract / Authoring
+            </p>
+
+            <div class="exp-deliverables-wrap">
+              <div class="deliverables-heading">
+                <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.2">
+                  <line x1="4" y1="9" x2="20" y2="9"></line>
+                  <line x1="4" y1="15" x2="20" y2="15"></line>
+                  <line x1="10" y1="3" x2="8" y2="21"></line>
+                  <line x1="16" y1="3" x2="14" y2="21"></line>
+                </svg>
+                <span>KEY DELIVERABLES</span>
+              </div>
+
+              <div class="deliverables-list">
+                <div class="deliverable-item">
+                  <div class="deliverable-icon">
+                    <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.5">
+                      <circle cx="12" cy="12" r="10"></circle>
+                      <path d="m9 12 2 2 4-4"></path>
+                    </svg>
+                  </div>
+                  <p class="deliverable-text">Architected and published 12+ online masterclasses on Udemy educating international students on AI workflows and prompt engineering.</p>
+                </div>
+
+                <div class="deliverable-item">
+                  <div class="deliverable-icon">
+                    <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.5">
+                      <circle cx="12" cy="12" r="10"></circle>
+                      <path d="m9 12 2 2 4-4"></path>
+                    </svg>
+                  </div>
+                  <p class="deliverable-text">Integrated Claude 3.5 Sonnet, Gamma, and HeyGen AI avatars to produce high-retention technical curriculum and code walkthroughs.</p>
+                </div>
+
+                <div class="deliverable-item">
+                  <div class="deliverable-icon">
+                    <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.5">
+                      <circle cx="12" cy="12" r="10"></circle>
+                      <path d="m9 12 2 2 4-4"></path>
+                    </svg>
+                  </div>
+                  <p class="deliverable-text">Engineered deterministic prompt pipelines and zero-shot/few-shot blueprint frameworks for automated course content generation.</p>
+                </div>
+              </div>
+            </div>
+
+            <div class="exp-tech-stack-row">
+              <div class="tech-stack-label">
+                <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M12 2L2 7l10 5 10-5-10-5z"></path>
+                  <path d="M2 17l10 5 10-5"></path>
+                  <path d="M2 12l10 5 10-5"></path>
+                </svg>
+                <span>TECH ARSENAL</span>
+              </div>
+              <div class="tech-pill-list">
+                <span class="pill-chip">Claude 3.5 Sonnet</span>
+                <span class="pill-chip">OpenAI API</span>
+                <span class="pill-chip">HeyGen AI</span>
+                <span class="pill-chip">Gamma</span>
+                <span class="pill-chip">Python</span>
+                <span class="pill-chip">Course Architecture</span>
+              </div>
+            </div>
+          </article>
+
+          <!-- Experience Card 2: Left Side -->
+          <article class="experience-card card-left">
+            <div class="exp-card-header">
+              <div class="exp-date-pill">
+                <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2">
+                  <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+                  <line x1="16" y1="2" x2="16" y2="6"></line>
+                  <line x1="8" y1="2" x2="8" y2="6"></line>
+                  <line x1="3" y1="10" x2="21" y2="10"></line>
+                </svg>
+                <span>2022 – Present</span>
+              </div>
+              <span class="exp-company-badge">AUTONOMOUS PROJECTS</span>
+            </div>
+
+            <h3 class="exp-role-title">Full-Stack &amp; Backend Engineer</h3>
+            <p class="exp-role-description">
+              Dhaka, Bangladesh • Self-Employed / Freelance
+            </p>
+
+            <div class="exp-deliverables-wrap">
+              <div class="deliverables-heading">
+                <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.2">
+                  <line x1="4" y1="9" x2="20" y2="9"></line>
+                  <line x1="4" y1="15" x2="20" y2="15"></line>
+                  <line x1="10" y1="3" x2="8" y2="21"></line>
+                  <line x1="16" y1="3" x2="14" y2="21"></line>
+                </svg>
+                <span>KEY DELIVERABLES</span>
+              </div>
+
+              <div class="deliverables-list">
+                <div class="deliverable-item">
+                  <div class="deliverable-icon">
+                    <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.5">
+                      <circle cx="12" cy="12" r="10"></circle>
+                      <path d="m9 12 2 2 4-4"></path>
+                    </svg>
+                  </div>
+                  <p class="deliverable-text">Delivered end-to-end full-stack web platforms using Next.js 14, Node.js, Express, and PostgreSQL.</p>
+                </div>
+
+                <div class="deliverable-item">
+                  <div class="deliverable-icon">
+                    <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.5">
+                      <circle cx="12" cy="12" r="10"></circle>
+                      <path d="m9 12 2 2 4-4"></path>
+                    </svg>
+                  </div>
+                  <p class="deliverable-text">Implemented cryptographic authentication systems (JWT, multi-factor PIN, Resend OTP email verification).</p>
+                </div>
+
+                <div class="deliverable-item">
+                  <div class="deliverable-icon">
+                    <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.5">
+                      <circle cx="12" cy="12" r="10"></circle>
+                      <path d="m9 12 2 2 4-4"></path>
+                    </svg>
+                  </div>
+                  <p class="deliverable-text">Integrated dual payment processing pipelines including Stripe and SSLCommerz with webhook idempotency.</p>
+                </div>
+              </div>
+            </div>
+
+            <div class="exp-tech-stack-row">
+              <div class="tech-stack-label">
+                <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M12 2L2 7l10 5 10-5-10-5z"></path>
+                  <path d="M2 17l10 5 10-5"></path>
+                  <path d="M2 12l10 5 10-5"></path>
+                </svg>
+                <span>TECH ARSENAL</span>
+              </div>
+              <div class="tech-pill-list">
+                <span class="pill-chip">Next.js</span>
+                <span class="pill-chip">React.js</span>
+                <span class="pill-chip">Node.js</span>
+                <span class="pill-chip">Express.js</span>
+                <span class="pill-chip">PostgreSQL</span>
+                <span class="pill-chip">Prisma ORM</span>
+                <span class="pill-chip">Stripe</span>
+              </div>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- E-Learning Courses Section (Matching User Reference Image) -->
+    <section class="courses-section" id="courses">
+      <div class="section-header">
+        <div class="section-title">
+          <span>COURSES DEVELOPED</span>
+          <span class="sparkle">✦</span>
+        </div>
+        <a href="https://www.udemy.com" target="_blank" rel="noopener" class="section-link">
+          <span>VIEW ALL COURSES</span>
+          <span class="arrow">⟶</span>
+        </a>
+      </div>
+
+      <!-- Courses 3-Card Grid (Matching User Reference Design) -->
+      <div class="courses-grid">
+        <!-- Course 1 -->
+        <article class="course-card">
+          <div class="course-thumb course-thumb-1">
+            <div class="thumb-grid-pattern"></div>
+            <div class="thumb-glow-spot"></div>
+            <div class="thumb-badge">CLAUDE AI</div>
+            <div class="thumb-visual">
+              <div class="thumb-icon-box">
+                <svg viewBox="0 0 24 24" width="30" height="30" fill="none" stroke="#c084fc" stroke-width="1.8">
+                  <circle cx="12" cy="12" r="10"></circle>
+                  <path d="M12 6v6l4 2"></path>
+                </svg>
+              </div>
+              <span class="visual-tag">PROMPT ENGINEERING</span>
+            </div>
+          </div>
+
+          <div class="course-card-footer">
+            <div class="course-info">
+              <h3 class="course-card-title">Claude Prompt Bootcamp</h3>
+              <p class="course-card-subtitle">AI &amp; Prompt Engineering · Udemy</p>
+            </div>
+            <a href="https://www.udemy.com" target="_blank" rel="noopener" class="course-circle-btn" aria-label="View Claude Prompt Bootcamp Course">
+              <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5">
+                <line x1="7" y1="17" x2="17" y2="7"></line>
+                <polyline points="7 7 17 7 17 17"></polyline>
+              </svg>
+            </a>
+          </div>
+        </article>
+
+        <!-- Course 2 -->
+        <article class="course-card">
+          <div class="course-thumb course-thumb-2">
+            <div class="thumb-grid-pattern"></div>
+            <div class="thumb-glow-spot"></div>
+            <div class="thumb-badge">CAREER STRATEGY</div>
+            <div class="thumb-visual">
+              <div class="thumb-icon-box">
+                <svg viewBox="0 0 24 24" width="30" height="30" fill="none" stroke="#fb923c" stroke-width="1.8">
+                  <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"></path>
+                  <circle cx="9" cy="7" r="4"></circle>
+                  <polyline points="16 11 18 13 22 9"></polyline>
+                </svg>
+              </div>
+              <span class="visual-tag">H-1B &amp; U.S. MARKET</span>
+            </div>
+          </div>
+
+          <div class="course-card-footer">
+            <div class="course-info">
+              <h3 class="course-card-title">Salary Negotiation Guide</h3>
+              <p class="course-card-subtitle">Immigrant Career &amp; Strategy · Udemy</p>
+            </div>
+            <a href="https://www.udemy.com" target="_blank" rel="noopener" class="course-circle-btn" aria-label="View Salary Negotiation Course">
+              <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5">
+                <line x1="7" y1="17" x2="17" y2="7"></line>
+                <polyline points="7 7 17 7 17 17"></polyline>
+              </svg>
+            </a>
+          </div>
+        </article>
+
+        <!-- Course 3 -->
+        <article class="course-card">
+          <div class="course-thumb course-thumb-3">
+            <div class="thumb-grid-pattern"></div>
+            <div class="thumb-glow-spot"></div>
+            <div class="thumb-brand">edureka!</div>
+            <div class="thumb-visual">
+              <div class="thumb-icon-box">
+                <svg viewBox="0 0 24 24" width="30" height="30" fill="none" stroke="#38bdf8" stroke-width="1.8">
+                  <rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect>
+                  <line x1="8" y1="21" x2="16" y2="21"></line>
+                  <line x1="12" y1="17" x2="12" y2="21"></line>
+                </svg>
+              </div>
+              <span class="visual-tag">PYTHON &amp; PYTORCH</span>
+            </div>
+          </div>
+
+          <div class="course-card-footer">
+            <div class="course-info">
+              <h3 class="course-card-title">Python for AI Masterclass</h3>
+              <p class="course-card-subtitle">PyTorch &amp; LLM Engineering · Edureka</p>
+            </div>
+            <a href="https://www.udemy.com" target="_blank" rel="noopener" class="course-circle-btn" aria-label="View Python for AI Course">
+              <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5">
+                <line x1="7" y1="17" x2="17" y2="7"></line>
+                <polyline points="7 7 17 7 17 17"></polyline>
+              </svg>
+            </a>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <!-- Services & Specialization Section (Interactive Accordion Stack - Right Before Footer) -->
+    <section class="services-section" id="services">
+      <div class="section-header">
+        <div class="section-title">
+          <span>SERVICES &amp; SPECIALIZATION</span>
+          <span class="sparkle">✦</span>
+        </div>
+        <span class="section-tag">ENGINEERING CAPABILITIES</span>
+      </div>
+
+      <div class="services-header-intro">
+        <div class="services-intro-text">
+          <h3 class="services-intro-title">
+            Enterprise full-stack systems, resilient backends, and autonomous AI pipelines.
+          </h3>
+          <p class="services-intro-desc">
+            Architecting production-ready web applications, secure database microservices, and LLM automation pipelines built for high throughput and reliability.
+          </p>
+        </div>
+        <div class="services-ticker-badge">
+          <span class="ticker-dot">●</span>
+          <span>AVAILABLE FOR NEW PROJECTS &amp; FULL-TIME ROLES</span>
+        </div>
+      </div>
+
+      <!-- Interactive Services Stack Container -->
+      <div class="services-stack-list">
+
+        <!-- Service 01: Full-Stack Applications -->
+        <div class="service-accordion-item is-expanded" data-service="01">
+          <div class="service-row-header">
+            <div class="service-num-title">
+              <span class="service-num">01.</span>
+              <div class="service-title-group">
+                <h4 class="service-title">Full-Stack Web Applications</h4>
+                <div class="service-quick-tags">
+                  <span>Next.js 14</span>
+                  <span>React.js</span>
+                  <span>TypeScript</span>
+                  <span>Stripe</span>
+                </div>
+              </div>
+            </div>
+            <button class="service-expand-btn" aria-label="Toggle Service Details">
+              <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2">
+                <line x1="7" y1="17" x2="17" y2="7"></line>
+                <polyline points="7 7 17 7 17 17"></polyline>
+              </svg>
+            </button>
+          </div>
+
+          <div class="service-row-content">
+            <div class="service-row-split">
+              <!-- Left Info Col -->
+              <div class="service-info-col">
+                <div class="service-tags-row">
+                  <span class="service-tag-pill">Next.js 14 App Router</span>
+                  <span class="service-tag-pill">React.js</span>
+                  <span class="service-tag-pill">TypeScript</span>
+                  <span class="service-tag-pill">Tailwind CSS</span>
+                  <span class="service-tag-pill">TanStack Query</span>
+                  <span class="service-tag-pill">Stripe &amp; SSLCommerz</span>
+                </div>
+
+                <p class="service-detail-desc">
+                  Engineering modern, high-performance web applications with modular component architecture, robust client/server state synchronization, dual payment gateways, and intuitive role-based admin controls.
+                </p>
+
+                <div class="service-features-list">
+                  <div class="service-feature-item">
+                    <span class="feat-icon">✦</span>
+                    <span>Role-based access control (User, Manager, Admin) with granular permission trees</span>
+                  </div>
+                  <div class="service-feature-item">
+                    <span class="feat-icon">✦</span>
+                    <span>Dynamic reservation, order management, and automated email/SMS dispatch</span>
+                  </div>
+                  <div class="service-feature-item">
+                    <span class="feat-icon">✦</span>
+                    <span>Optimized SSR/SSG caching delivering sub-second hydration and 99+ Lighthouse scores</span>
+                  </div>
+                </div>
+
+                <div class="service-highlight-box">
+                  <div class="highlight-bullet">✦</div>
+                  <span><strong>Production Outcome:</strong> Zero-downtime deployments, real-time cart/booking management, and frictionless checkout flows.</span>
+                </div>
+              </div>
+
+              <!-- Right Visual Mockup Col -->
+              <div class="service-visual-col">
+                <div class="service-mockup-card">
+                  <div class="mockup-top-bar">
+                    <div class="mockup-dots"><span></span><span></span><span></span></div>
+                    <span class="mockup-url">safus-restaurant.live/dashboard</span>
+                    <span class="mockup-status-dot">● Production Live</span>
+                  </div>
+                  <div class="mockup-content-body">
+                    <div class="mockup-metric-pill">
+                      <span class="pill-label">PAYMENT GATEWAYS</span>
+                      <span class="pill-val">Stripe + SSLCommerz Dual Integration</span>
+                    </div>
+                    <div class="mockup-metric-pill">
+                      <span class="pill-label">STATE ENGINE</span>
+                      <span class="pill-val">TanStack Query v5 + Optimistic UI</span>
+                    </div>
+                    <div class="mockup-metric-pill">
+                      <span class="pill-label">AUTHENTICATION</span>
+                      <span class="pill-val">JWT Token + Resend OTP Verified</span>
+                    </div>
+                    <div class="mockup-badge-highlight">
+                      <span>✓ 100% Mobile Responsive &amp; PWA Ready</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Service 02: Backend Architecture & APIs -->
+        <div class="service-accordion-item" data-service="02">
+          <div class="service-row-header">
+            <div class="service-num-title">
+              <span class="service-num">02.</span>
+              <div class="service-title-group">
+                <h4 class="service-title">Backend Architecture &amp; REST APIs</h4>
+                <div class="service-quick-tags">
+                  <span>Node.js</span>
+                  <span>PostgreSQL</span>
+                  <span>Prisma ORM</span>
+                  <span>JWT Auth</span>
+                </div>
+              </div>
+            </div>
+            <button class="service-expand-btn" aria-label="Toggle Service Details">
+              <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2">
+                <line x1="7" y1="17" x2="17" y2="7"></line>
+                <polyline points="7 7 17 7 17 17"></polyline>
+              </svg>
+            </button>
+          </div>
+
+          <div class="service-row-content">
+            <div class="service-row-split">
+              <!-- Left Info Col -->
+              <div class="service-info-col">
+                <div class="service-tags-row">
+                  <span class="service-tag-pill">Node.js &amp; Express</span>
+                  <span class="service-tag-pill">PostgreSQL</span>
+                  <span class="service-tag-pill">MongoDB</span>
+                  <span class="service-tag-pill">Prisma ORM</span>
+                  <span class="service-tag-pill">JWT &amp; PIN Security</span>
+                  <span class="service-tag-pill">RESTful APIs</span>
+                </div>
+
+                <p class="service-detail-desc">
+                  Architecting secure, fault-tolerant backend microservices and database schemas. Specializing in high-concurrency API routers, cryptographic token authentication, and automated financial transaction reconciliations.
+                </p>
+
+                <div class="service-features-list">
+                  <div class="service-feature-item">
+                    <span class="feat-icon">✦</span>
+                    <span>Normalized relational schema design with Prisma ORM migrations and connection pooling</span>
+                  </div>
+                  <div class="service-feature-item">
+                    <span class="feat-icon">✦</span>
+                    <span>Multi-factor PIN &amp; JWT authentication with Nodemailer/Resend OTP delivery</span>
+                  </div>
+                  <div class="service-feature-item">
+                    <span class="feat-icon">✦</span>
+                    <span>Automated batch processing for meal tracking, logistics fare calculations &amp; month-end settlement</span>
+                  </div>
+                </div>
+
+                <div class="service-highlight-box">
+                  <div class="highlight-bullet">✦</div>
+                  <span><strong>Production Outcome:</strong> ACID-compliant transactions, sub-10ms query times, and airtight API endpoint protection.</span>
+                </div>
+              </div>
+
+              <!-- Right Visual Mockup Col -->
+              <div class="service-visual-col">
+                <div class="service-mockup-card terminal-card">
+                  <div class="mockup-top-bar">
+                    <div class="mockup-dots"><span></span><span></span><span></span></div>
+                    <span class="mockup-url">api.parcelgo.server/v1/auth</span>
+                    <span class="mockup-status-dot">● 200 OK</span>
+                  </div>
+                  <div class="mockup-content-body">
+                    <div class="terminal-code-line">
+                      <span class="code-method">POST</span> <span class="code-path">/api/v1/auth/verify-otp</span>
+                    </div>
+                    <div class="terminal-code-line">
+                      <span class="code-comment">// Query executed in 3.8ms</span>
+                    </div>
+                    <div class="terminal-code-line">
+                      <span class="code-key">token:</span> <span class="code-str">"eyJhbGciOiJIUzI1NiIsInR5..."</span>
+                    </div>
+                    <div class="terminal-code-line">
+                      <span class="code-key">role:</span> <span class="code-str">"Admin_Privileged"</span>
+                    </div>
+                    <div class="mockup-badge-highlight">
+                      <span>🔒 AES-256 Encrypted &amp; Rate-Limited</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Service 03: Applied Machine Learning & Data Systems -->
+        <div class="service-accordion-item" data-service="03">
+          <div class="service-row-header">
+            <div class="service-num-title">
+              <span class="service-num">03.</span>
+              <div class="service-title-group">
+                <h4 class="service-title">Applied Machine Learning &amp; Analytics</h4>
+                <div class="service-quick-tags">
+                  <span>Python</span>
+                  <span>Scikit-Learn</span>
+                  <span>XGBoost</span>
+                  <span>FastAPI</span>
+                </div>
+              </div>
+            </div>
+            <button class="service-expand-btn" aria-label="Toggle Service Details">
+              <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2">
+                <line x1="7" y1="17" x2="17" y2="7"></line>
+                <polyline points="7 7 17 7 17 17"></polyline>
+              </svg>
+            </button>
+          </div>
+
+          <div class="service-row-content">
+            <div class="service-row-split">
+              <!-- Left Info Col -->
+              <div class="service-info-col">
+                <div class="service-tags-row">
+                  <span class="service-tag-pill">Python</span>
+                  <span class="service-tag-pill">Scikit-Learn</span>
+                  <span class="service-tag-pill">XGBoost &amp; LightGBM</span>
+                  <span class="service-tag-pill">SMOTE Balancing</span>
+                  <span class="service-tag-pill">Pandas &amp; NumPy</span>
+                  <span class="service-tag-pill">FastAPI</span>
+                </div>
+
+                <p class="service-detail-desc">
+                  Building statistical data pipelines and predictive classification models. Expert in feature engineering, SMOTE class balancing for imbalanced datasets, cross-validation, and deploying models behind fast inference endpoints.
+                </p>
+
+                <div class="service-features-list">
+                  <div class="service-feature-item">
+                    <span class="feat-icon">✦</span>
+                    <span>Benchmarking 7+ ML algorithms (Random Forest, Gradient Boosting, XGBoost, LightGBM, SVM)</span>
+                  </div>
+                  <div class="service-feature-item">
+                    <span class="feat-icon">✦</span>
+                    <span>Statistical feature extraction, outlier detection, and hyperparameter tuning with GridSearchCV</span>
+                  </div>
+                  <div class="service-feature-item">
+                    <span class="feat-icon">✦</span>
+                    <span>Packaging trained models into lightweight REST API inference microservices with FastAPI</span>
+                  </div>
+                </div>
+
+                <div class="service-highlight-box">
+                  <div class="highlight-bullet">✦</div>
+                  <span><strong>Research Benchmark:</strong> 84.4% classification accuracy achieved on real-world opinion dataset (317 sample records).</span>
+                </div>
+              </div>
+
+              <!-- Right Visual Mockup Col -->
+              <div class="service-visual-col">
+                <div class="service-mockup-card ml-score-card">
+                  <div class="mockup-top-bar">
+                    <div class="mockup-dots"><span></span><span></span><span></span></div>
+                    <span class="mockup-url">ml-pipeline.ensemble.eval</span>
+                    <span class="mockup-status-dot glow-green">● 84.4% Accuracy</span>
+                  </div>
+                  <div class="mockup-content-body">
+                    <div class="mockup-metric-pill">
+                      <span class="pill-label">OPTIMAL ENSEMBLE</span>
+                      <span class="pill-val">XGBoost + Random Forest</span>
+                    </div>
+                    <div class="mockup-metric-pill">
+                      <span class="pill-label">SMOTE BALANCING</span>
+                      <span class="pill-val">Synthetic Minority Oversampling</span>
+                    </div>
+                    <div class="mockup-metric-pill">
+                      <span class="pill-label">MICROSERVICE</span>
+                      <span class="pill-val">FastAPI REST Inference Endpoint</span>
+                    </div>
+                    <div class="mockup-badge-highlight">
+                      <span>✓ Validated on 317 Youth Survey Data Points</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Service 04: AI-Driven Technical Course Creation -->
+        <div class="service-accordion-item" data-service="04">
+          <div class="service-row-header">
+            <div class="service-num-title">
+              <span class="service-num">04.</span>
+              <div class="service-title-group">
+                <h4 class="service-title">AI Course Creation &amp; Technical Curriculum</h4>
+                <div class="service-quick-tags">
+                  <span>Udemy Author</span>
+                  <span>Claude</span>
+                  <span>Gamma AI</span>
+                  <span>HeyGen</span>
+                </div>
+              </div>
+            </div>
+            <button class="service-expand-btn" aria-label="Toggle Service Details">
+              <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2">
+                <line x1="7" y1="17" x2="17" y2="7"></line>
+                <polyline points="7 7 17 7 17 17"></polyline>
+              </svg>
+            </button>
+          </div>
+
+          <div class="service-row-content">
+            <div class="service-row-split">
+              <!-- Left Info Col -->
+              <div class="service-info-col">
+                <div class="service-tags-row">
+                  <span class="service-tag-pill">Udemy Catalog Publishing</span>
+                  <span class="service-tag-pill">Claude Script Generation</span>
+                  <span class="service-tag-pill">Gamma AI Presentations</span>
+                  <span class="service-tag-pill">HeyGen Video Avatars</span>
+                  <span class="service-tag-pill">Curriculum Architecture</span>
+                </div>
+
+                <p class="service-detail-desc">
+                  Designing, authoring, and publishing comprehensive online educational curricula. Combining AI-driven script synthesis, automated presentation decks, and virtual video generation to produce high-impact learning systems.
+                </p>
+
+                <div class="service-features-list">
+                  <div class="service-feature-item">
+                    <span class="feat-icon">✦</span>
+                    <span>12+ professional courses authored and published on Udemy across AI Agents &amp; Python</span>
+                  </div>
+                  <div class="service-feature-item">
+                    <span class="feat-icon">✦</span>
+                    <span>Automated content production pipeline using Claude, Gamma AI, and HeyGen avatars</span>
+                  </div>
+                  <div class="service-feature-item">
+                    <span class="feat-icon">✦</span>
+                    <span>Practical bootcamps covering Prompt Engineering, No-Code AI, and Enterprise Multi-Agent Systems</span>
+                  </div>
+                </div>
+
+                <div class="service-highlight-box">
+                  <div class="highlight-bullet">✦</div>
+                  <span><strong>Publishing Footprint:</strong> 12+ published courses on Udemy educating global students on cutting-edge AI technologies.</span>
+                </div>
+              </div>
+
+              <!-- Right Visual Mockup Col -->
+              <div class="service-visual-col">
+                <div class="service-mockup-card course-studio-card">
+                  <div class="mockup-top-bar">
+                    <div class="mockup-dots"><span></span><span></span><span></span></div>
+                    <span class="mockup-url">studio.udemy.author/samim</span>
+                    <span class="mockup-status-dot glow-gold">● Live Courses</span>
+                  </div>
+                  <div class="mockup-content-body">
+                    <div class="mockup-metric-pill">
+                      <span class="pill-label">COURSES PUBLISHED</span>
+                      <span class="pill-val">12+ Live Udemy Masterclasses</span>
+                    </div>
+                    <div class="mockup-metric-pill">
+                      <span class="pill-label">CORE DOMAINS</span>
+                      <span class="pill-val">AI Agents, Claude Blueprint, Python</span>
+                    </div>
+                    <div class="mockup-metric-pill">
+                      <span class="pill-label">PRODUCTION ENGINE</span>
+                      <span class="pill-val">Claude + Gamma + HeyGen AI</span>
+                    </div>
+                    <div class="mockup-badge-highlight">
+                      <span>✦ Certified AI Education Content Creator</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Bottom Services CTA Action -->
+      <div class="services-footer-cta">
+        <a href="#contact" class="btn-services-cta">
+          <span>Discuss Your Next Project</span>
+          <span class="sparkle">✦</span>
+        </a>
+      </div>
+    </section>
+
+    <!-- Contact / Let's Talk Section (Matching Screenshot) -->
+    <footer class="contact-section" id="contact">
+      <div class="contact-card-container">
+        
+        <!-- Left Column: Details & Connect Info -->
+        <div class="contact-info-col">
+          <div class="contact-eyebrow">
+            <span class="eyebrow-badge">LET'S CONNECT</span>
+          </div>
+
+          <h2 class="contact-headline">
+            <span class="headline-primary">Have a project in mind?</span>
+            <span class="headline-gradient">Let's create something amazing together.</span>
+          </h2>
+
+          <!-- Direct Channels List -->
+          <div class="contact-direct-list">
+            <!-- Email -->
+            <a href="mailto:tamjidulislamsamim@gmail.com" class="direct-item" title="Send Email">
+              <div class="direct-icon-box">
+                <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.8">
+                  <rect x="2" y="4" width="20" height="16" rx="2"></rect>
+                  <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"></path>
+                </svg>
+              </div>
+              <span class="direct-text">tamjidulislamsamim@gmail.com</span>
+            </a>
+
+            <!-- Phone / WhatsApp -->
+            <a href="tel:+8801743597989" class="direct-item" title="Call / WhatsApp">
+              <div class="direct-icon-box">
+                <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.8">
+                  <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path>
+                </svg>
+              </div>
+              <span class="direct-text">+880 1743 597989</span>
+            </a>
+
+            <!-- Visiting Card Link -->
+            <a href="https://hihello.com/p/15a18c40-8d2b-4b05-8f39-e2ce947be1a4" target="_blank" rel="noopener" class="direct-item" title="Open Visiting Card">
+              <div class="direct-icon-box">
+                <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.8">
+                  <rect x="3" y="4" width="18" height="16" rx="3"></rect>
+                  <circle cx="9" cy="10" r="2"></circle>
+                  <line x1="15" y1="8" x2="17" y2="8"></line>
+                  <line x1="15" y1="12" x2="17" y2="12"></line>
+                  <line x1="7" y1="16" x2="17" y2="16"></line>
+                </svg>
+              </div>
+              <span class="direct-text">Visiting Card</span>
+              <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" class="external-arrow" style="opacity:0.6;margin-left:4px;">
+                <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path>
+                <polyline points="15 3 21 3 21 9"></polyline>
+                <line x1="10" y1="14" x2="21" y2="3"></line>
+              </svg>
+            </a>
+          </div>
+
+          <div class="contact-signature-badge">
+            <span>© 2026 Md. Samim</span>
+          </div>
+        </div>
+
+        <!-- Center: Interactive Message Form -->
+        <div class="contact-form-col">
+          <div class="form-header">
+            <div class="form-header-title">
+              <svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor" class="form-header-icon">
+                <path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/>
+              </svg>
+              <span>Send Me A Message</span>
+            </div>
+            <p class="form-header-sub">Fill in the form below and I'll get back to you as soon as possible.</p>
+          </div>
+
+          <form id="talk-form" class="talk-form" onsubmit="event.preventDefault(); window.handleFormSubmit();" action="https://formsubmit.co/tamjidulislamsamim@gmail.com" method="POST">
+            <div class="form-row">
+              <div class="form-group">
+                <label class="form-label" for="form-name">YOUR NAME <span class="req-star">*</span></label>
+                <input type="text" id="form-name" name="name" required placeholder="Md. Samim" class="form-input">
+              </div>
+              <div class="form-group">
+                <label class="form-label" for="form-email">EMAIL ADDRESS <span class="req-star">*</span></label>
+                <input type="email" id="form-email" name="email" required placeholder="name@example.com" class="form-input">
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label" for="form-subject">SUBJECT</label>
+              <input type="text" id="form-subject" name="subject" placeholder="Inquiry / Research Collaboration / Hiring" class="form-input">
+            </div>
+
+            <div class="form-group">
+              <label class="form-label" for="form-message">MESSAGE <span class="req-star">*</span></label>
+              <textarea id="form-message" name="message" required placeholder="Write your message here..." rows="3" class="form-input form-textarea"></textarea>
+            </div>
+
+            <div class="form-submit-row">
+              <button type="submit" class="btn-send-message">
+                <span>Send Message</span>
+                <svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor" class="send-icon">
+                  <path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/>
+                </svg>
+              </button>
+              <div id="form-feedback" class="form-feedback"></div>
+            </div>
+          </form>
+        </div>
+
+        <!-- Right Column: Profile Portrait Card -->
+        <div class="contact-visual-col">
+          <div class="contact-portrait-card">
+            <img src="dark_villain_frames_24fps_high_quality/frame_0001.jpg" alt="Md. Samim Profile" class="contact-profile-img">
+            <div class="portrait-overlay-gradient"></div>
+            <div class="artwork-badge">
+              <span class="sparkle">✦</span>
+              <span>AVAILABLE FOR NEW PROJECTS</span>
+            </div>
+          </div>
+        </div>
+
+    </footer>
+
+  </main>
+
+  <!-- Sonner Toast Notification Container -->
+  <div id="toast-container" class="toast-container" aria-live="polite"></div>
+
+  <!-- Luxury Success Modal -->
+  <div id="contact-modal" class="contact-modal-backdrop" aria-hidden="true">
+    <div class="contact-modal-dialog">
+      <!-- Animated Border Glow Aura -->
+      <div class="modal-border-aura"></div>
+
+      <button class="modal-close-btn" id="modal-close-btn" aria-label="Close modal">
+        <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2">
+          <line x1="18" y1="6" x2="6" y2="18"></line>
+          <line x1="6" y1="6" x2="18" y2="18"></line>
+        </svg>
+      </button>
+
+      <!-- 3D Luminous Badge -->
+      <div class="modal-badge-container">
+        <div class="modal-orbital-ring"></div>
+        <div class="modal-ambient-glow"></div>
+        <div class="modal-badge-core">
+          <svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="#2ec4b6" stroke-width="2.5" class="modal-check-svg">
+            <polyline points="20 6 9 17 4 12"></polyline>
+          </svg>
+        </div>
+      </div>
+
+      <div class="modal-content-wrap">
+        <div class="modal-pill-tag">
+          <span class="sparkle">✦</span>
+          <span>TRANSMISSION CONFIRMED</span>
+          <span class="sparkle">✦</span>
+        </div>
+
+        <h3 class="modal-title" id="modal-user-name">Thank you!</h3>
+
+        <!-- Destination Capsule -->
+        <div class="modal-destination-pill">
+          <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" class="pill-mail-icon">
+            <rect x="2" y="4" width="20" height="16" rx="2"></rect>
+            <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"></path>
+          </svg>
+          <span>Delivered to <strong>tamjidulislamsamim@gmail.com</strong></span>
+        </div>
+
+        <p class="modal-sub">
+          Your inquiry has been successfully delivered. Md. Samim will review your details and respond shortly.
+        </p>
+      </div>
+
+      <div class="modal-actions">
+        <button class="btn-modal-dismiss" id="modal-dismiss-btn">
+          <span>CONTINUE BROWSING</span>
+          <span class="sparkle">✦</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
