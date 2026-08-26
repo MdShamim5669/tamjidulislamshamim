@@ -33,6 +33,7 @@ export default function AdminDashboard() {
   const [isLoggingIn, setIsLoggingIn] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [activeTab, setActiveTab] = useState<TabType>('services');
+  const [isMobileNavOpen, setIsMobileNavOpen] = useState(false);
 
   // Drag and drop state
   const [isDragging, setIsDragging] = useState(false);
@@ -390,8 +391,13 @@ export default function AdminDashboard() {
            AUTHENTICATED DASHBOARD: LUXURY SIDEBAR & EXECUTIVE WORKSPACE
            ========================================================================== */
         <div className="admin-executive-shell">
+          {/* Mobile Overlay Backdrop */}
+          {isMobileNavOpen && (
+            <div className="sidebar-backdrop" onClick={() => setIsMobileNavOpen(false)} />
+          )}
+
           {/* Modern Sleek Left Sidebar */}
-          <aside className="admin-luxury-sidebar">
+          <aside className={`admin-luxury-sidebar ${isMobileNavOpen ? 'mobile-open' : ''}`}>
             {/* Brand Header */}
             <div className="sidebar-brand-header">
               <div className="sidebar-logo-box">
@@ -404,6 +410,14 @@ export default function AdminDashboard() {
                   <span>SUPER ADMIN</span>
                 </div>
               </div>
+              <button
+                type="button"
+                className="sidebar-close-mobile-btn"
+                onClick={() => setIsMobileNavOpen(false)}
+                aria-label="Close menu"
+              >
+                ✕
+              </button>
             </div>
 
             {/* Quick KPI Counters Strip */}
@@ -429,7 +443,7 @@ export default function AdminDashboard() {
                 <button
                   type="button"
                   className={`sidebar-nav-item ${activeTab === 'projects' ? 'active' : ''}`}
-                  onClick={() => setActiveTab('projects')}
+                  onClick={() => { setActiveTab('projects'); setIsMobileNavOpen(false); }}
                 >
                   <div className="nav-item-left">
                     <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" strokeWidth="2">
@@ -445,7 +459,7 @@ export default function AdminDashboard() {
                 <button
                   type="button"
                   className={`sidebar-nav-item ${activeTab === 'courses' ? 'active' : ''}`}
-                  onClick={() => setActiveTab('courses')}
+                  onClick={() => { setActiveTab('courses'); setIsMobileNavOpen(false); }}
                 >
                   <div className="nav-item-left">
                     <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" strokeWidth="2">
@@ -460,7 +474,7 @@ export default function AdminDashboard() {
                 <button
                   type="button"
                   className={`sidebar-nav-item ${activeTab === 'services' ? 'active' : ''}`}
-                  onClick={() => setActiveTab('services')}
+                  onClick={() => { setActiveTab('services'); setIsMobileNavOpen(false); }}
                 >
                   <div className="nav-item-left">
                     <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" strokeWidth="2">
@@ -474,7 +488,7 @@ export default function AdminDashboard() {
                 <button
                   type="button"
                   className={`sidebar-nav-item ${activeTab === 'experience' ? 'active' : ''}`}
-                  onClick={() => setActiveTab('experience')}
+                  onClick={() => { setActiveTab('experience'); setIsMobileNavOpen(false); }}
                 >
                   <div className="nav-item-left">
                     <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" strokeWidth="2">
@@ -489,7 +503,7 @@ export default function AdminDashboard() {
                 <button
                   type="button"
                   className={`sidebar-nav-item ${activeTab === 'education' ? 'active' : ''}`}
-                  onClick={() => setActiveTab('education')}
+                  onClick={() => { setActiveTab('education'); setIsMobileNavOpen(false); }}
                 >
                   <div className="nav-item-left">
                     <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" strokeWidth="2">
@@ -510,7 +524,7 @@ export default function AdminDashboard() {
                 <button
                   type="button"
                   className={`sidebar-nav-item ${activeTab === 'inquiries' ? 'active' : ''}`}
-                  onClick={() => setActiveTab('inquiries')}
+                  onClick={() => { setActiveTab('inquiries'); setIsMobileNavOpen(false); }}
                 >
                   <div className="nav-item-left">
                     <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" strokeWidth="2">
@@ -525,7 +539,7 @@ export default function AdminDashboard() {
                 <button
                   type="button"
                   className={`sidebar-nav-item ${activeTab === 'cv' ? 'active' : ''}`}
-                  onClick={() => setActiveTab('cv')}
+                  onClick={() => { setActiveTab('cv'); setIsMobileNavOpen(false); }}
                 >
                   <div className="nav-item-left">
                     <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" strokeWidth="2">
@@ -542,7 +556,7 @@ export default function AdminDashboard() {
                 <button
                   type="button"
                   className={`sidebar-nav-item ${activeTab === 'settings' ? 'active' : ''}`}
-                  onClick={() => setActiveTab('settings')}
+                  onClick={() => { setActiveTab('settings'); setIsMobileNavOpen(false); }}
                 >
                   <div className="nav-item-left">
                     <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" strokeWidth="2">
@@ -594,6 +608,22 @@ export default function AdminDashboard() {
             {/* Executive Top Header */}
             <header className="workspace-top-bar">
               <div className="workspace-header-left">
+                {/* Mobile Drawer Toggle Button */}
+                <button
+                  type="button"
+                  className="admin-mobile-toggle-btn"
+                  onClick={() => setIsMobileNavOpen(!isMobileNavOpen)}
+                  aria-label="Toggle navigation menu"
+                >
+                  <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" strokeWidth="2.2">
+                    {isMobileNavOpen ? (
+                      <path d="M18 6L6 18M6 6l12 12" />
+                    ) : (
+                      <path d="M3 12h18M3 6h18M3 18h18" />
+                    )}
+                  </svg>
+                </button>
+
                 <div className="workspace-breadcrumb">
                   <span>DASHBOARD</span>
                   <span className="breadcrumb-sep">/</span>
