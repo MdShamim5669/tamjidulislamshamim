@@ -72,7 +72,7 @@ export default function AdminDashboard() {
   }, [authToken]);
 
   // Handle Image Upload for Projects, Courses, and Services
-  const handleImageUpload = async (file: File, callback: (url: string) => void) => {
+  const handleImageUpload = async (file: File, callback: (url: string, publicId?: string) => void) => {
     if (!file) return;
     const formData = new FormData();
     formData.append('file', file);
@@ -86,7 +86,7 @@ export default function AdminDashboard() {
         }
       });
       if (res.data?.data?.secureUrl) {
-        callback(res.data.data.secureUrl);
+        callback(res.data.data.secureUrl, res.data.data.publicId);
         toast.success('Photo Uploaded to Cloudinary ✦');
       } else {
         throw new Error('No secure URL returned');
@@ -96,7 +96,7 @@ export default function AdminDashboard() {
       const reader = new FileReader();
       reader.onload = (e) => {
         if (e.target?.result) {
-          callback(e.target.result as string);
+          callback(e.target.result as string, undefined);
           toast.success('Photo Selected ✦');
         }
       };
@@ -105,6 +105,7 @@ export default function AdminDashboard() {
       setIsUploadingImage(false);
     }
   };
+
 
   // ==========================================
   // QUERIES FOR ALL DYNAMIC SECTIONS
@@ -1556,6 +1557,10 @@ export default function AdminDashboard() {
                   payload.imageUrl = payload.image;
                 }
 
+                // If empty strings were passed for image URLs, normalize to null
+                if (payload.imageUrl === '') payload.imageUrl = null;
+                if (payload.bannerUrl === '') payload.bannerUrl = null;
+
                 if (type === 'course') {
                   if (typeof payload.topics === 'string') {
                     payload.topics = payload.topics.split(',').map((s: string) => s.trim()).filter(Boolean);
@@ -1642,7 +1647,7 @@ export default function AdminDashboard() {
                           <button
                             type="button"
                             className="photo-remove-btn"
-                            onClick={() => setEditingItem({ ...editingItem, data: { ...editingItem.data, imageUrl: '' } })}
+                            onClick={() => setEditingItem({ ...editingItem, data: { ...editingItem.data, imageUrl: '', cloudinaryPublicId: null } })}
                           >
                             ✕ Remove Photo
                           </button>
@@ -1656,8 +1661,8 @@ export default function AdminDashboard() {
                             e.preventDefault();
                             e.stopPropagation();
                             if (e.dataTransfer.files?.[0]) {
-                              handleImageUpload(e.dataTransfer.files[0], (url) => {
-                                setEditingItem({ ...editingItem, data: { ...editingItem.data, imageUrl: url } });
+                              handleImageUpload(e.dataTransfer.files[0], (url, publicId) => {
+                                setEditingItem({ ...editingItem, data: { ...editingItem.data, imageUrl: url, cloudinaryPublicId: publicId || null } });
                               });
                             }
                           }}
@@ -1669,8 +1674,8 @@ export default function AdminDashboard() {
                             style={{ display: 'none' }}
                             onChange={(e) => {
                               if (e.target.files?.[0]) {
-                                handleImageUpload(e.target.files[0], (url) => {
-                                  setEditingItem({ ...editingItem, data: { ...editingItem.data, imageUrl: url } });
+                                handleImageUpload(e.target.files?.[0], (url, publicId) => {
+                                  setEditingItem({ ...editingItem, data: { ...editingItem.data, imageUrl: url, cloudinaryPublicId: publicId || null } });
                                 });
                               }
                             }}
@@ -1691,7 +1696,7 @@ export default function AdminDashboard() {
                           className="admin-form-input"
                           placeholder="Or paste Direct Image URL (https://...)"
                           value={editingItem.data.imageUrl || ''}
-                          onChange={(e) => setEditingItem({ ...editingItem, data: { ...editingItem.data, imageUrl: e.target.value } })}
+                          onChange={(e) => setEditingItem({ ...editingItem, data: { ...editingItem.data, imageUrl: e.target.value, cloudinaryPublicId: null } })}
                         />
                       </div>
                     </div>
@@ -1750,7 +1755,7 @@ export default function AdminDashboard() {
                           <button
                             type="button"
                             className="photo-remove-btn"
-                            onClick={() => setEditingItem({ ...editingItem, data: { ...editingItem.data, bannerUrl: '', image: '' } })}
+                            onClick={() => setEditingItem({ ...editingItem, data: { ...editingItem.data, bannerUrl: '', image: '', cloudinaryPublicId: null } })}
                           >
                             ✕ Remove Banner
                           </button>
@@ -1764,8 +1769,8 @@ export default function AdminDashboard() {
                             e.preventDefault();
                             e.stopPropagation();
                             if (e.dataTransfer.files?.[0]) {
-                              handleImageUpload(e.dataTransfer.files[0], (url) => {
-                                setEditingItem({ ...editingItem, data: { ...editingItem.data, bannerUrl: url, image: url } });
+                              handleImageUpload(e.dataTransfer.files[0], (url, publicId) => {
+                                setEditingItem({ ...editingItem, data: { ...editingItem.data, bannerUrl: url, image: url, cloudinaryPublicId: publicId || null } });
                               });
                             }
                           }}
@@ -1777,8 +1782,8 @@ export default function AdminDashboard() {
                             style={{ display: 'none' }}
                             onChange={(e) => {
                               if (e.target.files?.[0]) {
-                                handleImageUpload(e.target.files[0], (url) => {
-                                  setEditingItem({ ...editingItem, data: { ...editingItem.data, bannerUrl: url, image: url } });
+                                handleImageUpload(e.target.files[0], (url, publicId) => {
+                                  setEditingItem({ ...editingItem, data: { ...editingItem.data, bannerUrl: url, image: url, cloudinaryPublicId: publicId || null } });
                                 });
                               }
                             }}
@@ -1799,7 +1804,7 @@ export default function AdminDashboard() {
                           className="admin-form-input"
                           placeholder="Or paste Direct Image URL (https://...)"
                           value={editingItem.data.bannerUrl || editingItem.data.image || ''}
-                          onChange={(e) => setEditingItem({ ...editingItem, data: { ...editingItem.data, bannerUrl: e.target.value, image: e.target.value } })}
+                          onChange={(e) => setEditingItem({ ...editingItem, data: { ...editingItem.data, bannerUrl: e.target.value, image: e.target.value, cloudinaryPublicId: null } })}
                         />
                       </div>
                     </div>
@@ -2076,7 +2081,7 @@ export default function AdminDashboard() {
                           <button
                             type="button"
                             className="photo-remove-btn"
-                            onClick={() => setEditingItem({ ...editingItem, data: { ...editingItem.data, imageUrl: '', image: '' } })}
+                            onClick={() => setEditingItem({ ...editingItem, data: { ...editingItem.data, imageUrl: '', image: '', cloudinaryPublicId: null } })}
                           >
                             ✕ Remove Photo
                           </button>
@@ -2090,8 +2095,8 @@ export default function AdminDashboard() {
                             e.preventDefault();
                             e.stopPropagation();
                             if (e.dataTransfer.files?.[0]) {
-                              handleImageUpload(e.dataTransfer.files[0], (url) => {
-                                setEditingItem({ ...editingItem, data: { ...editingItem.data, imageUrl: url, image: url } });
+                              handleImageUpload(e.dataTransfer.files[0], (url, publicId) => {
+                                setEditingItem({ ...editingItem, data: { ...editingItem.data, imageUrl: url, image: url, cloudinaryPublicId: publicId || null } });
                               });
                             }
                           }}
@@ -2103,8 +2108,8 @@ export default function AdminDashboard() {
                             style={{ display: 'none' }}
                             onChange={(e) => {
                               if (e.target.files?.[0]) {
-                                handleImageUpload(e.target.files[0], (url) => {
-                                  setEditingItem({ ...editingItem, data: { ...editingItem.data, imageUrl: url, image: url } });
+                                handleImageUpload(e.target.files[0], (url, publicId) => {
+                                  setEditingItem({ ...editingItem, data: { ...editingItem.data, imageUrl: url, image: url, cloudinaryPublicId: publicId || null } });
                                 });
                               }
                             }}
@@ -2125,7 +2130,7 @@ export default function AdminDashboard() {
                           className="admin-form-input"
                           placeholder="Or paste Direct Image URL (https://...)"
                           value={editingItem.data.imageUrl || editingItem.data.image || ''}
-                          onChange={(e) => setEditingItem({ ...editingItem, data: { ...editingItem.data, imageUrl: e.target.value, image: e.target.value } })}
+                          onChange={(e) => setEditingItem({ ...editingItem, data: { ...editingItem.data, imageUrl: e.target.value, image: e.target.value, cloudinaryPublicId: null } })}
                         />
                       </div>
                     </div>
