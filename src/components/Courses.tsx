@@ -6,42 +6,6 @@ import { useQuery } from '@tanstack/react-query';
 import api from '../lib/api';
 import TypewriterText from './TypewriterText';
 
-const defaultCourses = [
-  {
-    id: 'c-1',
-    title: 'Mastering Claude 3.5 Sonnet & Autonomous AI Agents',
-    category: 'Udemy Masterclass • 1.8K Students',
-    platform: 'Udemy',
-    badge: 'BESTSELLER',
-    rating: 4.9,
-    description: 'Autonomous multi-agent pipelines, prompt blueprints, and deterministic JSON tool validation.',
-    image: '/dark_villain_frames_24fps_high_quality/frame_0001.jpg',
-    courseUrl: 'https://www.udemy.com'
-  },
-  {
-    id: 'c-2',
-    title: 'Full-Stack AI Application with Next.js 14 & Node.js',
-    category: 'Full-Stack Architecture • 1.4K Students',
-    platform: 'Udemy',
-    badge: 'FEATURED',
-    rating: 4.8,
-    description: 'High-performance web applications with Next.js App Router, Express REST APIs, and Prisma ORM.',
-    image: '/campus_photo.png',
-    courseUrl: 'https://www.udemy.com'
-  },
-  {
-    id: 'c-3',
-    title: 'AI Video & Course Production with HeyGen & Gamma',
-    category: 'Generative Media • 2.1K Students',
-    platform: 'Udemy',
-    badge: 'POPULAR',
-    rating: 4.9,
-    description: 'Automating high-retention technical curriculum, synthetic AI avatars, and presentation decks.',
-    image: '/dark_villain_frames_24fps_high_quality/frame_0001.jpg',
-    courseUrl: 'https://www.udemy.com'
-  }
-];
-
 export default function Courses() {
   const [activeDot, setActiveDot] = useState(0);
   const sliderRef = useRef<HTMLDivElement>(null);
@@ -50,23 +14,24 @@ export default function Courses() {
   const scrollLeftStart = useRef(0);
   const hasMoved = useRef(false);
 
-  // TanStack Query for dynamic courses
-  const { data: serverCourses } = useQuery({
+  // TanStack Query for dynamic courses directly from PostgreSQL backend
+  const { data: courses = [], isLoading } = useQuery({
     queryKey: ['courses'],
     queryFn: async () => {
-      try {
-        const res = await api.get('/courses');
-        if (res.data?.data && Array.isArray(res.data.data) && res.data.data.length > 0) {
-          return res.data.data;
-        }
-      } catch (e) {
-        // Fallback
+      const res = await api.get('/courses');
+      if (res.data?.data && Array.isArray(res.data.data)) {
+        return res.data.data;
       }
-      return null;
+      return [];
     },
+    retry: 3,
+    retryDelay: 2000,
   });
 
-  const courses = serverCourses && serverCourses.length > 0 ? serverCourses : defaultCourses;
+  // If no courses in database, do not show section on homepage
+  if (!isLoading && courses.length === 0) {
+    return null;
+  }
 
   // Mouse Drag / Swipe Handlers
   const handleMouseDown = (e: React.MouseEvent) => {
