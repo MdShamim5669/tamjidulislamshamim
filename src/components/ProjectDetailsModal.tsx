@@ -2,6 +2,7 @@
 
 import React from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { getAssetUrl } from '../lib/api';
 
 interface ProjectDetailsModalProps {
   isOpen: boolean;
@@ -20,7 +21,7 @@ export default function ProjectDetailsModal({
         : (typeof project.techStack === 'string' ? project.techStack.split(',').map((t: string) => t.trim()).filter(Boolean) : []))
     : [];
 
-  const imageUrl = project?.imageUrl || project?.image || '/dark_villain_frames_24fps_high_quality/frame_0001.jpg';
+  const imageUrl = getAssetUrl(project?.imageUrl || project?.image);
   const liveUrl = project?.liveUrl || 'https://github.com/MdShamim5669';
   const clientUrl = project?.clientUrl || project?.githubClientUrl || project?.githubUrl || 'https://github.com/MdShamim5669';
   const serverUrl = project?.serverUrl || project?.githubServerUrl || (project?.githubUrl ? `${project.githubUrl}` : 'https://github.com/MdShamim5669');
@@ -60,6 +61,9 @@ export default function ProjectDetailsModal({
                 src={imageUrl}
                 alt={project.title}
                 className="proj-modal-cover-img"
+                onError={(e) => {
+                  (e.target as HTMLImageElement).src = '/dark_villain_frames_24fps_high_quality/frame_0001.jpg';
+                }}
               />
               <div className="proj-modal-cover-gradient"></div>
               <div className="proj-modal-title-overlay">

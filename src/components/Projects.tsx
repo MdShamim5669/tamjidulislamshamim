@@ -3,7 +3,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import Link from 'next/link';
 import { useQuery } from '@tanstack/react-query';
-import api from '../lib/api';
+import api, { getAssetUrl } from '../lib/api';
 import ProjectDetailsModal from './ProjectDetailsModal';
 import TypewriterText from './TypewriterText';
 
@@ -126,7 +126,7 @@ export default function Projects() {
           <div className="ref-slider-inner-row">
             {projects.map((project: any, index: number) => {
               const numStr = project.number || `0${index + 1}`;
-              const imageUrl = project.imageUrl || project.image || '/dark_villain_frames_24fps_high_quality/frame_0001.jpg';
+              const imageUrl = getAssetUrl(project.imageUrl || project.image);
 
               return (
                 <div
@@ -145,6 +145,9 @@ export default function Projects() {
                       alt={project.title}
                       className="ref-clean-thumb-img"
                       draggable={false}
+                      onError={(e) => {
+                        (e.target as HTMLImageElement).src = '/dark_villain_frames_24fps_high_quality/frame_0001.jpg';
+                      }}
                     />
                     <div className="ref-clean-img-overlay">
                       <span className="ref-clean-hover-badge">VIEW ARCHITECTURE ✦</span>

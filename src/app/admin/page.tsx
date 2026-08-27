@@ -4,7 +4,7 @@ import React, { useState, useEffect, useRef, useCallback } from 'react';
 import Link from 'next/link';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { toast } from 'sonner';
-import api from '../../lib/api';
+import api, { getAssetUrl } from '../../lib/api';
 
 type TabType = 'services' | 'courses' | 'experience' | 'education' | 'projects' | 'inquiries' | 'settings' | 'cv';
 
@@ -800,7 +800,14 @@ export default function AdminDashboard() {
                           <div style={{ display: 'flex', gap: '14px', alignItems: 'center' }}>
                             {item.imageUrl && (
                               <div className="admin-card-thumb-box">
-                                <img src={item.imageUrl} alt={item.title} className="admin-card-thumb" />
+                                <img
+                                  src={getAssetUrl(item.imageUrl)}
+                                  alt={item.title}
+                                  className="admin-card-thumb"
+                                  onError={(e) => {
+                                    (e.target as HTMLImageElement).src = '/dark_villain_frames_24fps_high_quality/frame_0001.jpg';
+                                  }}
+                                />
                               </div>
                             )}
                             <div className="admin-card-title-group">
@@ -1138,7 +1145,14 @@ export default function AdminDashboard() {
                           <div style={{ display: 'flex', gap: '14px', alignItems: 'center' }}>
                             {(proj.imageUrl || proj.image) && (
                               <div className="admin-card-thumb-box">
-                                <img src={proj.imageUrl || proj.image} alt={proj.title} className="admin-card-thumb" />
+                                <img
+                                  src={getAssetUrl(proj.imageUrl || proj.image)}
+                                  alt={proj.title}
+                                  className="admin-card-thumb"
+                                  onError={(e) => {
+                                    (e.target as HTMLImageElement).src = '/dark_villain_frames_24fps_high_quality/frame_0001.jpg';
+                                  }}
+                                />
                               </div>
                             )}
                             <div className="admin-card-title-group">
@@ -1617,7 +1631,14 @@ export default function AdminDashboard() {
                     <div className="admin-photo-uploader">
                       {editingItem.data.imageUrl ? (
                         <div className="photo-preview-wrap">
-                          <img src={editingItem.data.imageUrl} alt="Service Preview" className="photo-preview-thumb" />
+                          <img
+                            src={getAssetUrl(editingItem.data.imageUrl)}
+                            alt="Service Preview"
+                            className="photo-preview-thumb"
+                            onError={(e) => {
+                              (e.target as HTMLImageElement).src = '/dark_villain_frames_24fps_high_quality/frame_0001.jpg';
+                            }}
+                          />
                           <button
                             type="button"
                             className="photo-remove-btn"
@@ -1627,7 +1648,20 @@ export default function AdminDashboard() {
                           </button>
                         </div>
                       ) : (
-                        <div className="photo-upload-dropzone">
+                        <div
+                          className="photo-upload-dropzone"
+                          onDragOver={(e) => { e.preventDefault(); e.stopPropagation(); }}
+                          onDragEnter={(e) => { e.preventDefault(); e.stopPropagation(); }}
+                          onDrop={(e) => {
+                            e.preventDefault();
+                            e.stopPropagation();
+                            if (e.dataTransfer.files?.[0]) {
+                              handleImageUpload(e.dataTransfer.files[0], (url) => {
+                                setEditingItem({ ...editingItem, data: { ...editingItem.data, imageUrl: url } });
+                              });
+                            }
+                          }}
+                        >
                           <input
                             type="file"
                             accept="image/*"
@@ -1647,7 +1681,7 @@ export default function AdminDashboard() {
                               <circle cx="8.5" cy="8.5" r="1.5"></circle>
                               <polyline points="21 15 16 10 5 21"></polyline>
                             </svg>
-                            <span>{isUploadingImage ? 'Uploading Photo...' : 'Upload Service Image (JPG, PNG, WebP)'}</span>
+                            <span>{isUploadingImage ? 'Uploading Photo...' : 'Upload or Drag & Drop Service Image (JPG, PNG, WebP)'}</span>
                           </label>
                         </div>
                       )}
@@ -1705,7 +1739,14 @@ export default function AdminDashboard() {
                     <div className="admin-photo-uploader">
                       {editingItem.data.bannerUrl || editingItem.data.image ? (
                         <div className="photo-preview-wrap">
-                          <img src={editingItem.data.bannerUrl || editingItem.data.image} alt="Course Preview" className="photo-preview-thumb" />
+                          <img
+                            src={getAssetUrl(editingItem.data.bannerUrl || editingItem.data.image)}
+                            alt="Course Preview"
+                            className="photo-preview-thumb"
+                            onError={(e) => {
+                              (e.target as HTMLImageElement).src = '/dark_villain_frames_24fps_high_quality/frame_0001.jpg';
+                            }}
+                          />
                           <button
                             type="button"
                             className="photo-remove-btn"
@@ -1715,7 +1756,20 @@ export default function AdminDashboard() {
                           </button>
                         </div>
                       ) : (
-                        <div className="photo-upload-dropzone">
+                        <div
+                          className="photo-upload-dropzone"
+                          onDragOver={(e) => { e.preventDefault(); e.stopPropagation(); }}
+                          onDragEnter={(e) => { e.preventDefault(); e.stopPropagation(); }}
+                          onDrop={(e) => {
+                            e.preventDefault();
+                            e.stopPropagation();
+                            if (e.dataTransfer.files?.[0]) {
+                              handleImageUpload(e.dataTransfer.files[0], (url) => {
+                                setEditingItem({ ...editingItem, data: { ...editingItem.data, bannerUrl: url, image: url } });
+                              });
+                            }
+                          }}
+                        >
                           <input
                             type="file"
                             accept="image/*"
@@ -1735,7 +1789,7 @@ export default function AdminDashboard() {
                               <circle cx="8.5" cy="8.5" r="1.5"></circle>
                               <polyline points="21 15 16 10 5 21"></polyline>
                             </svg>
-                            <span>{isUploadingImage ? 'Uploading Banner...' : 'Upload Course Banner Artwork (JPG, PNG, WebP)'}</span>
+                            <span>{isUploadingImage ? 'Uploading Banner...' : 'Upload or Drag & Drop Course Banner Artwork (JPG, PNG, WebP)'}</span>
                           </label>
                         </div>
                       )}
@@ -2011,7 +2065,14 @@ export default function AdminDashboard() {
                     <div className="admin-photo-uploader">
                       {editingItem.data.imageUrl || editingItem.data.image ? (
                         <div className="photo-preview-wrap">
-                          <img src={editingItem.data.imageUrl || editingItem.data.image} alt="Project Preview" className="photo-preview-thumb" />
+                          <img
+                            src={getAssetUrl(editingItem.data.imageUrl || editingItem.data.image)}
+                            alt="Project Preview"
+                            className="photo-preview-thumb"
+                            onError={(e) => {
+                              (e.target as HTMLImageElement).src = '/dark_villain_frames_24fps_high_quality/frame_0001.jpg';
+                            }}
+                          />
                           <button
                             type="button"
                             className="photo-remove-btn"
@@ -2021,7 +2082,20 @@ export default function AdminDashboard() {
                           </button>
                         </div>
                       ) : (
-                        <div className="photo-upload-dropzone">
+                        <div
+                          className="photo-upload-dropzone"
+                          onDragOver={(e) => { e.preventDefault(); e.stopPropagation(); }}
+                          onDragEnter={(e) => { e.preventDefault(); e.stopPropagation(); }}
+                          onDrop={(e) => {
+                            e.preventDefault();
+                            e.stopPropagation();
+                            if (e.dataTransfer.files?.[0]) {
+                              handleImageUpload(e.dataTransfer.files[0], (url) => {
+                                setEditingItem({ ...editingItem, data: { ...editingItem.data, imageUrl: url, image: url } });
+                              });
+                            }
+                          }}
+                        >
                           <input
                             type="file"
                             accept="image/*"
@@ -2041,7 +2115,7 @@ export default function AdminDashboard() {
                               <circle cx="8.5" cy="8.5" r="1.5"></circle>
                               <polyline points="21 15 16 10 5 21"></polyline>
                             </svg>
-                            <span>{isUploadingImage ? 'Uploading Screenshot...' : 'Upload Project Screenshot (JPG, PNG, WebP)'}</span>
+                            <span>{isUploadingImage ? 'Uploading Screenshot...' : 'Upload or Drag & Drop Project Screenshot (JPG, PNG, WebP)'}</span>
                           </label>
                         </div>
                       )}

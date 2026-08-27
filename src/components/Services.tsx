@@ -4,7 +4,7 @@ import React, { useState } from 'react';
 import Link from 'next/link';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useQuery } from '@tanstack/react-query';
-import api from '../lib/api';
+import api, { getAssetUrl } from '../lib/api';
 import TypewriterText from './TypewriterText';
 
 const defaultServices = [
@@ -235,9 +235,12 @@ export default function Services() {
                         </div>
                       </div>
                       <img
-                        src={service.imageUrl || service.image || '/dark_villain_frames_24fps_high_quality/frame_0001.jpg'}
+                        src={getAssetUrl(service.imageUrl || service.image)}
                         alt={service.title}
                         className="ref-showcase-img"
+                        onError={(e) => {
+                          (e.target as HTMLImageElement).src = '/dark_villain_frames_24fps_high_quality/frame_0001.jpg';
+                        }}
                       />
                     </div>
                   </motion.div>

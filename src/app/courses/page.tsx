@@ -4,7 +4,7 @@ import React from 'react';
 import Link from 'next/link';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useQuery } from '@tanstack/react-query';
-import api from '../../lib/api';
+import api, { getAssetUrl } from '../../lib/api';
 
 export default function CoursesPage() {
   // Fetch dynamic courses directly from PostgreSQL backend
@@ -72,7 +72,7 @@ export default function CoursesPage() {
                 const studentsCountStr = course.studentsCount ? `${course.studentsCount}+ STUDENTS` : (course.students || '1200+ STUDENTS');
                 const ratingText = `★ ${ratingVal} (${studentsCountStr})`;
                 const platformLabel = (course.platform || 'UDEMY').toUpperCase();
-                const courseImg = course.bannerUrl || course.image || course.imageUrl || (index % 2 === 0 ? '/dark_villain_frames_24fps_high_quality/frame_0001.jpg' : '/campus_photo.png');
+                const courseImg = getAssetUrl(course.bannerUrl || course.image || course.imageUrl, index % 2 === 0 ? '/dark_villain_frames_24fps_high_quality/frame_0001.jpg' : '/campus_photo.png');
                 const courseUrl = course.courseUrl || course.liveUrl || 'https://www.udemy.com';
 
                 return (
@@ -135,6 +135,9 @@ export default function CoursesPage() {
                           alt={course.title}
                           className="course-media-img"
                           loading="lazy"
+                          onError={(e) => {
+                            (e.target as HTMLImageElement).src = '/dark_villain_frames_24fps_high_quality/frame_0001.jpg';
+                          }}
                         />
                         <div className="course-media-badge">
                           <span>{course.badge || 'UDEMY'}</span>

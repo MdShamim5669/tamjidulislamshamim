@@ -3,7 +3,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import Link from 'next/link';
 import { useQuery } from '@tanstack/react-query';
-import api from '../lib/api';
+import api, { getAssetUrl } from '../lib/api';
 import TypewriterText from './TypewriterText';
 
 export default function Courses() {
@@ -125,7 +125,7 @@ export default function Courses() {
           {courses.map((course: any, index: number) => {
             const courseTitle = course.title;
             const courseSubtitle = course.category || (course.topics ? (Array.isArray(course.topics) ? course.topics.slice(0, 2).join(', ') : course.topics) : 'Udemy Masterclass');
-            const courseImg = course.bannerUrl || course.image || course.imageUrl || (index % 2 === 0 ? '/dark_villain_frames_24fps_high_quality/frame_0001.jpg' : '/campus_photo.png');
+            const courseImg = getAssetUrl(course.bannerUrl || course.image || course.imageUrl, index % 2 === 0 ? '/dark_villain_frames_24fps_high_quality/frame_0001.jpg' : '/campus_photo.png');
             const courseLink = course.courseUrl || course.liveUrl || 'https://www.udemy.com';
 
             return (
@@ -146,8 +146,11 @@ export default function Courses() {
                   <img
                     src={courseImg}
                     alt={courseTitle}
-                    className="ref-course-cover-img"
-                    loading="lazy"
+                    className="ref-course-card-img"
+                    draggable={false}
+                    onError={(e) => {
+                      (e.target as HTMLImageElement).src = '/dark_villain_frames_24fps_high_quality/frame_0001.jpg';
+                    }}
                   />
                   <div className="ref-course-img-badge">
                     <span>{course.badge || 'UDEMY'}</span>

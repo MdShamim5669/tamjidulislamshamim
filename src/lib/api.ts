@@ -46,13 +46,29 @@ api.interceptors.request.use(
   (error) => Promise.reject(error)
 );
 
-// Response Interceptor for global handling
-api.interceptors.response.use(
-  (response) => response,
-  (error) => {
-    return Promise.reject(error);
-  }
-);
-
 export default api;
+
+/**
+ * Normalizes any image or asset URL.
+ * Automatically resolves relative backend `/uploads/...` paths to backend server host.
+ */
+export const getAssetUrl = (url?: string | null, fallback: string = '/dark_villain_frames_24fps_high_quality/frame_0001.jpg'): string => {
+  if (!url || typeof url !== 'string' || !url.trim()) return fallback;
+  const trimmed = url.trim();
+  
+  if (trimmed.startsWith('http://') || trimmed.startsWith('https://') || trimmed.startsWith('data:') || trimmed.startsWith('blob:')) {
+    return trimmed;
+  }
+  
+  if (trimmed.startsWith('/uploads')) {
+    const isLocal = typeof window !== 'undefined' && (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1');
+    const backendOrigin = isLocal
+      ? 'http://localhost:5000'
+      : (process.env.NEXT_PUBLIC_API_URL ? process.env.NEXT_PUBLIC_API_URL.replace(/\/api\/?$/, '') : 'https://animated-portfolio-server.onrender.com');
+    return `${backendOrigin}${trimmed}`;
+  }
+  
+  return trimmed;
+};
+
 
