@@ -121,19 +121,22 @@ export default function Projects() {
   const hasMoved = useRef(false);
 
   // TanStack Query for dynamic projects from backend
-  const { data: projects = defaultProjects } = useQuery({
+  const { data: serverProjects } = useQuery({
     queryKey: ['projects'],
     queryFn: async () => {
       try {
         const res = await api.get('/projects');
-        if (res.data?.data && res.data.data.length > 0) return res.data.data;
+        if (res.data?.data && Array.isArray(res.data.data) && res.data.data.length > 0) {
+          return res.data.data;
+        }
       } catch (e) {
         // Fallback
       }
-      return defaultProjects;
+      return null;
     },
-    initialData: defaultProjects,
   });
+
+  const projects = serverProjects && serverProjects.length > 0 ? serverProjects : defaultProjects;
 
   const totalDots = Math.max(1, projects.length - 1);
 

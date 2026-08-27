@@ -79,25 +79,26 @@ export default function Services() {
   const [expandedIndex, setExpandedIndex] = useState<number | null>(null);
 
   // TanStack Query for dynamic services
-  const { data: servicesData } = useQuery({
+  const { data: serverServices } = useQuery({
     queryKey: ['services'],
     queryFn: async () => {
       try {
         const res = await api.get('/services');
-        if (res.data?.data && res.data.data.length > 0) return res.data.data;
+        if (res.data?.data && Array.isArray(res.data.data) && res.data.data.length > 0) {
+          return res.data.data;
+        }
       } catch (e) {
         // Fallback
       }
-      return defaultServices;
+      return null;
     },
-    initialData: defaultServices,
   });
+
+  const displayedServices = serverServices && serverServices.length > 0 ? serverServices : defaultServices;
 
   const toggleAccordion = (index: number) => {
     setExpandedIndex(expandedIndex === index ? null : index);
   };
-
-  const displayedServices = servicesData;
 
   const scrollToContact = (e: React.MouseEvent<HTMLAnchorElement>) => {
     e.preventDefault();

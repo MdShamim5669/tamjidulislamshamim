@@ -1,7 +1,10 @@
 import axios from 'axios';
 
 export const API_BASE_URL =
-  process.env.NEXT_PUBLIC_API_URL || 'https://animated-portfolio-server.onrender.com/api';
+  process.env.NEXT_PUBLIC_API_URL ||
+  (typeof window !== 'undefined' && (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1')
+    ? 'http://localhost:5000/api'
+    : 'https://animated-portfolio-server.onrender.com/api');
 
 export const api = axios.create({
   baseURL: API_BASE_URL,
@@ -15,6 +18,13 @@ export const api = axios.create({
 api.interceptors.request.use(
   (config) => {
     if (typeof window !== 'undefined') {
+      if (
+        (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') &&
+        !process.env.NEXT_PUBLIC_API_URL
+      ) {
+        config.baseURL = 'http://localhost:5000/api';
+      }
+
       const token = localStorage.getItem('admin_token');
       const key = localStorage.getItem('admin_cv_key');
 

@@ -51,19 +51,22 @@ export default function Courses() {
   const hasMoved = useRef(false);
 
   // TanStack Query for dynamic courses
-  const { data: courses = defaultCourses } = useQuery({
+  const { data: serverCourses } = useQuery({
     queryKey: ['courses'],
     queryFn: async () => {
       try {
         const res = await api.get('/courses');
-        if (res.data?.data && res.data.data.length > 0) return res.data.data;
+        if (res.data?.data && Array.isArray(res.data.data) && res.data.data.length > 0) {
+          return res.data.data;
+        }
       } catch (e) {
         // Fallback
       }
-      return defaultCourses;
+      return null;
     },
-    initialData: defaultCourses,
   });
+
+  const courses = serverCourses && serverCourses.length > 0 ? serverCourses : defaultCourses;
 
   // Mouse Drag / Swipe Handlers
   const handleMouseDown = (e: React.MouseEvent) => {

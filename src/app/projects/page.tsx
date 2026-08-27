@@ -135,19 +135,22 @@ export default function ProjectsPage() {
   const [selectedProject, setSelectedProject] = useState<any | null>(null);
 
   // TanStack Query for dynamic projects from backend
-  const { data: projects = defaultAllProjects } = useQuery({
+  const { data: serverProjects } = useQuery({
     queryKey: ['projects'],
     queryFn: async () => {
       try {
         const res = await api.get('/projects');
-        if (res.data?.data && res.data.data.length > 0) return res.data.data;
+        if (res.data?.data && Array.isArray(res.data.data) && res.data.data.length > 0) {
+          return res.data.data;
+        }
       } catch (e) {
         // Fallback
       }
-      return defaultAllProjects;
+      return null;
     },
-    initialData: defaultAllProjects,
   });
+
+  const projects = serverProjects && serverProjects.length > 0 ? serverProjects : defaultAllProjects;
 
   const categories = ['ALL', 'FULL-STACK WEB', 'BACKEND & APIS', 'AI & MACHINE LEARNING', 'AUTONOMOUS AI'];
 

@@ -29,19 +29,22 @@ export default function Experience() {
   const [scrollProgress, setScrollProgress] = useState(15);
   const containerRef = useRef<HTMLDivElement>(null);
 
-  const { data: experiences = defaultExperiences } = useQuery({
+  const { data: serverExperiences } = useQuery({
     queryKey: ['experiences'],
     queryFn: async () => {
       try {
         const res = await api.get('/experiences');
-        if (res.data?.data && res.data.data.length > 0) return res.data.data;
+        if (res.data?.data && Array.isArray(res.data.data) && res.data.data.length > 0) {
+          return res.data.data;
+        }
       } catch (e) {
         // Fallback
       }
-      return defaultExperiences;
+      return null;
     },
-    initialData: defaultExperiences,
   });
+
+  const experiences = serverExperiences && serverExperiences.length > 0 ? serverExperiences : defaultExperiences;
 
   // Calculate dynamic scroll progress (Down to Up, Up to Down)
   useEffect(() => {

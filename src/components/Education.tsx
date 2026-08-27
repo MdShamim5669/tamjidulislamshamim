@@ -56,19 +56,22 @@ export default function Education() {
   const containerRef = useRef<HTMLDivElement>(null);
 
   // TanStack Query for dynamic academic degrees from backend
-  const { data: educations = defaultEducations } = useQuery({
+  const { data: serverEducations } = useQuery({
     queryKey: ['educations'],
     queryFn: async () => {
       try {
         const res = await api.get('/education');
-        if (res.data?.data && res.data.data.length > 0) return res.data.data;
+        if (res.data?.data && Array.isArray(res.data.data) && res.data.data.length > 0) {
+          return res.data.data;
+        }
       } catch (e) {
         // Fallback
       }
-      return defaultEducations;
+      return null;
     },
-    initialData: defaultEducations,
   });
+
+  const educations = serverEducations && serverEducations.length > 0 ? serverEducations : defaultEducations;
 
   // Calculate dynamic scroll progress (Down to Up, Up to Down)
   useEffect(() => {
