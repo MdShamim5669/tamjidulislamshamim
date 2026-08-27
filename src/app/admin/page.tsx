@@ -1531,10 +1531,25 @@ export default function AdminDashboard() {
                 else if (type === 'process') endpoint = isEdit ? `/education/processes/${editingItem.data.id}` : '/education/processes';
                 else if (type === 'project') endpoint = isEdit ? `/projects/${editingItem.data.id}` : '/projects';
 
+                const payload = { ...editingItem.data };
+                if (payload.image && !payload.imageUrl && type === 'project') {
+                  payload.imageUrl = payload.image;
+                }
+                if (payload.image && !payload.bannerUrl && type === 'course') {
+                  payload.bannerUrl = payload.image;
+                }
+                if (payload.image && !payload.imageUrl && type === 'service') {
+                  payload.imageUrl = payload.image;
+                }
+                delete payload.id;
+                delete payload.createdAt;
+                delete payload.updatedAt;
+                delete payload.image;
+
                 saveMutation.mutate({
                   endpoint,
                   method: isEdit ? 'put' : 'post',
-                  data: editingItem.data
+                  data: payload
                 });
               }}
               className="admin-modal-form"
