@@ -237,7 +237,7 @@ export default function Hero() {
 
               {/* LinkedIn */}
               <a
-                href={settings?.linkedinUrl || 'https://linkedin.com'}
+                href={settings?.linkedinUrl || 'https://www.linkedin.com/in/md-samim5669/'}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="hero-social-circle"

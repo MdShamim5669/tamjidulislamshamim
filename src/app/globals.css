@@ -9541,178 +9541,258 @@ body {
   }
 }
 
-/* ==========================================================================
-   DEDICATED ALL PROJECTS CATALOG PAGE (3 PROJECTS PER ROW GRID)
+/* =========================================================================/* ==========================================================================
+   DEDICATED ALL PROJECTS CATALOG PAGE (PREMIUM 3 PROJECTS PER ROW GRID)
    ========================================================================== */
-.proj-catalog-grid {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 28px;
-  width: 100%;
-  margin-top: 10px;
+.projects-archive-page {
+  min-height: 100vh;
+  background: radial-gradient(circle at 50% 0%, #101426 0%, #05060a 60%, #020305 100%);
+  color: #f1f5f9;
+  position: relative;
+  overflow-x: hidden;
+  padding-bottom: 90px;
 }
 
-@media (max-width: 1050px) {
-  .proj-catalog-grid {
-    grid-template-columns: repeat(2, 1fr);
-    gap: 22px;
+.projects-archive-main {
+  max-width: 1440px;
+  margin: 0 auto;
+  padding: 120px 36px 60px 36px;
+}
+
+.projects-grid-3col {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 32px;
+  width: 100%;
+  margin-top: 20px;
+}
+
+@media (max-width: 1180px) {
+  .projects-grid-3col {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 24px;
   }
 }
 
-@media (max-width: 640px) {
-  .proj-catalog-grid {
+@media (max-width: 720px) {
+  .projects-archive-main {
+    padding: 100px 20px 50px 20px;
+  }
+  .projects-grid-3col {
     grid-template-columns: 1fr;
     gap: 26px;
   }
 }
 
-.proj-catalog-card {
+/* Premium Project Archive Card */
+.project-archive-card {
   position: relative;
-  background: transparent !important;
-  border: none;
+  background: rgba(13, 16, 26, 0.75);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.09);
+  border-radius: 22px;
+  overflow: hidden;
   cursor: pointer;
   display: flex;
   flex-direction: column;
-  gap: 14px;
-  transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.5);
+  transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.35s ease, box-shadow 0.35s ease;
 }
 
-.proj-catalog-card:hover {
-  transform: translateY(-4px);
+.project-archive-card:hover {
+  transform: translateY(-6px);
+  border-color: rgba(230, 57, 70, 0.45);
+  box-shadow: 0 24px 50px rgba(0, 0, 0, 0.75), 0 0 35px rgba(230, 57, 70, 0.18);
 }
 
-.proj-catalog-image-viewport {
+/* Image Viewport */
+.project-card-image-box {
   position: relative;
   width: 100%;
-  height: 210px;
-  border-radius: 20px;
+  height: 220px;
   overflow: hidden;
-  background: #090a12;
-  border: 1px solid rgba(255, 255, 255, 0.12);
-  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.5);
-  transition: all 0.35s ease;
+  background: #090a14;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
 }
 
-.proj-catalog-card:hover .proj-catalog-image-viewport {
-  border-color: rgba(230, 57, 70, 0.5);
-  box-shadow: 0 18px 45px rgba(0, 0, 0, 0.7), 0 0 25px rgba(230, 57, 70, 0.18);
-}
-
-.proj-catalog-thumb-img {
+.project-card-thumb {
   width: 100%;
   height: 100%;
   object-fit: cover;
-  object-position: center 20%;
-  filter: brightness(0.92) contrast(1.08);
-  transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1), filter 0.5s ease;
+  object-position: center 25%;
+  filter: brightness(0.92) contrast(1.06);
+  transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1), filter 0.4s ease;
 }
 
-.proj-catalog-card:hover .proj-catalog-thumb-img {
-  transform: scale(1.05);
-  filter: brightness(1.02) contrast(1.15);
+.project-archive-card:hover .project-card-thumb {
+  transform: scale(1.06);
+  filter: brightness(1.02) contrast(1.12);
 }
 
-.proj-catalog-img-overlay {
+.project-card-top-badges {
+  position: absolute;
+  top: 14px;
+  left: 14px;
+  right: 14px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  z-index: 2;
+}
+
+.project-category-tag {
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: #f1f5f9;
+  background: rgba(10, 12, 20, 0.85);
+  backdrop-filter: blur(12px);
+  padding: 5px 12px;
+  border-radius: 999px;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+}
+
+.project-index-pill {
+  font-size: 11px;
+  font-weight: 900;
+  color: #e63946;
+  background: rgba(10, 12, 20, 0.85);
+  backdrop-filter: blur(12px);
+  padding: 4px 10px;
+  border-radius: 999px;
+  border: 1px solid rgba(230, 57, 70, 0.35);
+  box-shadow: 0 0 10px rgba(230, 57, 70, 0.2);
+}
+
+.project-hover-overlay {
   position: absolute;
   inset: 0;
-  background: linear-gradient(180deg, transparent 40%, rgba(0, 0, 0, 0.8) 100%);
+  background: linear-gradient(180deg, rgba(0, 0, 0, 0.1) 0%, rgba(0, 0, 0, 0.85) 100%);
   display: flex;
   align-items: flex-end;
-  padding: 14px;
+  justify-content: center;
+  padding: 16px;
   opacity: 0;
   transition: opacity 0.3s ease;
+  z-index: 3;
 }
 
-.proj-catalog-card:hover .proj-catalog-img-overlay {
+.project-archive-card:hover .project-hover-overlay {
   opacity: 1;
 }
 
-.proj-catalog-hover-badge {
-  font-size: 9px;
+.project-hover-cta {
+  font-size: 10.5px;
   font-weight: 800;
   letter-spacing: 0.14em;
   color: #ffffff;
-  background: rgba(230, 57, 70, 0.88);
-  backdrop-filter: blur(8px);
-  padding: 4px 10px;
+  background: linear-gradient(135deg, #e63946 0%, #c1121f 100%);
+  padding: 6px 14px;
   border-radius: 999px;
+  box-shadow: 0 4px 15px rgba(230, 57, 70, 0.5);
 }
 
-/* Bottom Details Row for Catalog Page */
-.proj-catalog-bottom-row {
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-end;
-  padding: 0 4px;
-  gap: 12px;
-}
-
-.proj-catalog-text-stack {
+/* Card Body Details */
+.project-card-body {
+  padding: 22px 22px 20px 22px;
   display: flex;
   flex-direction: column;
-  gap: 2px;
-  overflow: hidden;
+  flex: 1;
 }
 
-.proj-catalog-title {
-  font-size: 16px;
+.project-card-title {
+  font-size: 17px;
   font-weight: 800;
-  letter-spacing: 0.01em;
   color: #ffffff;
-  margin: 0;
-  white-space: nowrap;
+  line-height: 1.35;
+  margin: 0 0 8px 0;
+  display: -webkit-box;
+  -webkit-line-clamp: 1;
+  -webkit-box-orient: vertical;
   overflow: hidden;
-  text-overflow: ellipsis;
-  line-height: 1.25;
+  letter-spacing: -0.01em;
 }
 
-.proj-catalog-sub {
-  font-size: 12px;
-  color: #cbd5e1;
-  margin: 0;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-
-.proj-catalog-tags {
-  font-size: 10.5px;
-  font-weight: 700;
+.project-card-desc {
+  font-size: 13px;
   color: #94a3b8;
-  white-space: nowrap;
+  line-height: 1.6;
+  margin: 0 0 16px 0;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
   overflow: hidden;
-  text-overflow: ellipsis;
 }
 
-.proj-catalog-action {
+.project-tech-badges {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-bottom: 20px;
+}
+
+.project-tech-pill {
+  font-size: 11px;
+  font-weight: 700;
+  color: #cbd5e1;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.09);
+  padding: 3px 9px;
+  border-radius: 6px;
+  transition: all 0.2s ease;
+}
+
+.project-archive-card:hover .project-tech-pill {
+  border-color: rgba(255, 255, 255, 0.16);
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.project-card-footer {
+  margin-top: auto;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-top: 14px;
+  border-top: 1px solid rgba(255, 255, 255, 0.07);
+}
+
+.project-footer-explore {
   display: inline-flex;
   align-items: center;
-  gap: 3px;
+  gap: 6px;
+  font-size: 12px;
+  font-weight: 800;
+  color: #e2e8f0;
+  letter-spacing: 0.04em;
+  transition: color 0.2s ease;
+}
+
+.project-archive-card:hover .project-footer-explore {
   color: #e63946;
-  font-size: 22px;
-  font-weight: 900;
-  line-height: 1;
-  flex-shrink: 0;
-  transition: all 0.25s ease;
 }
 
-.proj-catalog-num {
-  font-size: 20px;
-  font-weight: 900;
-}
-
-.proj-catalog-arrow {
-  font-size: 20px;
-  font-weight: 900;
+.project-footer-arrow {
+  font-size: 14px;
   transition: transform 0.25s ease;
 }
 
-.proj-catalog-card:hover .proj-catalog-arrow {
+.project-archive-card:hover .project-footer-arrow {
   transform: translateX(4px);
 }
 
-.proj-catalog-card:hover .proj-catalog-action {
-  filter: drop-shadow(0 0 10px rgba(230, 57, 70, 0.6));
+.project-footer-number {
+  font-size: 18px;
+  font-weight: 900;
+  color: #e63946;
+  font-family: monospace, var(--font-sans);
+  letter-spacing: -0.02em;
+  transition: filter 0.25s ease;
+}
+
+.project-archive-card:hover .project-footer-number {
+  filter: drop-shadow(0 0 8px rgba(230, 57, 70, 0.6));
 }
 
 /* Image Viewport */

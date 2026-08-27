@@ -27,6 +27,14 @@ export default function ProjectsPage() {
 
   const categories = ['ALL', 'FULL-STACK WEB', 'BACKEND & APIS', 'AI & MACHINE LEARNING', 'AUTONOMOUS AI'];
 
+  const getCategoryCount = (cat: string) => {
+    if (cat === 'ALL') return projects.length;
+    return projects.filter((p: any) => {
+      const c = (p.category || '').toUpperCase();
+      return c.includes(cat) || cat.includes(c);
+    }).length;
+  };
+
   const filteredProjects = selectedCategory === 'ALL'
     ? projects
     : projects.filter((p: any) => {
@@ -35,7 +43,7 @@ export default function ProjectsPage() {
       });
 
   return (
-    <div className="services-page-container">
+    <div className="projects-archive-page">
       {/* Top Floating Glass Navigation */}
       <header className="services-page-nav">
         <Link href="/" className="services-back-link">
@@ -57,8 +65,8 @@ export default function ProjectsPage() {
         </Link>
       </header>
 
-      {/* Main Content Area */}
-      <main className="services-page-main">
+      {/* Main Content Area (Wide 3-in-a-row Container) */}
+      <main className="projects-archive-main">
         {/* Page Hero Header */}
         <section className="services-hero-section">
           <span className="services-hero-eyebrow">— COMPLETE PRODUCTION REPOSITORY</span>
@@ -71,63 +79,92 @@ export default function ProjectsPage() {
 
           {/* Category Filter Pills */}
           <div className="services-category-bar">
-            {categories.map((cat) => (
-              <button
-                type="button"
-                key={cat}
-                className={`category-pill ${selectedCategory === cat ? 'active' : ''}`}
-                onClick={() => setSelectedCategory(cat)}
-              >
-                {cat}
-              </button>
-            ))}
+            {categories.map((cat) => {
+              const count = getCategoryCount(cat);
+              return (
+                <button
+                  type="button"
+                  key={cat}
+                  className={`category-pill ${selectedCategory === cat ? 'active' : ''}`}
+                  onClick={() => setSelectedCategory(cat)}
+                >
+                  <span>{cat}</span>
+                  {count > 0 && <span style={{ opacity: 0.7, fontSize: '10px', marginLeft: '4px' }}>({count})</span>}
+                </button>
+              );
+            })}
           </div>
         </section>
 
-        {/* 3 Projects Per Row Grid (Wrap to Row 2, Row 3, etc.) */}
-        <section className="proj-catalog-grid">
+        {/* 3 Projects Per Row Grid */}
+        <section className="projects-grid-3col">
           <AnimatePresence mode="popLayout">
             {filteredProjects.map((project: any, index: number) => {
               const numStr = project.number || (index + 1 < 10 ? `0${index + 1}` : `${index + 1}`);
               const imageUrl = project.imageUrl || project.image || '/dark_villain_frames_24fps_high_quality/frame_0001.jpg';
-              const techSnippet = Array.isArray(project.techStack)
-                ? project.techStack.slice(0, 3).join(' • ')
-                : (typeof project.techStack === 'string' ? project.techStack.split(',').slice(0, 3).join(' • ') : project.category);
+              
+              const techList: string[] = Array.isArray(project.techStack)
+                ? project.techStack
+                : (typeof project.techStack === 'string' ? project.techStack.split(',').map((s: string) => s.trim()).filter(Boolean) : []);
 
               return (
                 <motion.div
                   layout
                   key={project.id || index}
-                  className="proj-catalog-card"
-                  initial={{ opacity: 0, scale: 0.95 }}
-                  animate={{ opacity: 1, scale: 1 }}
+                  className="project-archive-card"
+                  initial={{ opacity: 0, y: 16 }}
+                  animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, scale: 0.95 }}
                   transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
                   onClick={() => setSelectedProject(project)}
                 >
-                  {/* Top Image Window */}
-                  <div className="proj-catalog-image-viewport">
+                  {/* Top Image Box */}
+                  <div className="project-card-image-box">
                     <img
                       src={imageUrl}
                       alt={project.title}
-                      className="proj-catalog-thumb-img"
+                      className="project-card-thumb"
                     />
-                    <div className="proj-catalog-img-overlay">
-                      <span className="proj-catalog-hover-badge">VIEW ARCHITECTURE ✦</span>
+
+                    {/* Floating Top Badges */}
+                    <div className="project-card-top-badges">
+                      <span className="project-category-tag">{project.category || 'Full-Stack Web'}</span>
+                      <span className="project-index-pill">{numStr}</span>
+                    </div>
+
+                    {/* Hover Overlay */}
+                    <div className="project-hover-overlay">
+                      <span className="project-hover-cta">INSPECT ARCHITECTURE ✦</span>
                     </div>
                   </div>
 
-                  {/* Bottom Details Row */}
-                  <div className="proj-catalog-bottom-row">
-                    <div className="proj-catalog-text-stack">
-                      <h3 className="proj-catalog-title">{project.title}</h3>
-                      <p className="proj-catalog-sub">{project.subtitle || project.category}</p>
-                      <span className="proj-catalog-tags">{techSnippet}</span>
-                    </div>
+                  {/* Card Body Details */}
+                  <div className="project-card-body">
+                    <h3 className="project-card-title" title={project.title}>
+                      {project.title}
+                    </h3>
+                    <p className="project-card-desc">
+                      {project.description || project.subtitle || 'Production-grade full stack system architecture and engineering deployment.'}
+                    </p>
 
-                    <div className="proj-catalog-action" title="Open Project Details">
-                      <span className="proj-catalog-num">{numStr}</span>
-                      <span className="proj-catalog-arrow">→</span>
+                    {/* Tech Stack Pills */}
+                    {techList.length > 0 && (
+                      <div className="project-tech-badges">
+                        {techList.slice(0, 4).map((tech, tIdx) => (
+                          <span key={tIdx} className="project-tech-pill">
+                            {tech}
+                          </span>
+                        ))}
+                      </div>
+                    )}
+
+                    {/* Card Footer Row */}
+                    <div className="project-card-footer">
+                      <span className="project-footer-explore">
+                        <span>Case Study &amp; Demo</span>
+                        <span className="project-footer-arrow">→</span>
+                      </span>
+                      <span className="project-footer-number">{numStr}</span>
                     </div>
                   </div>
                 </motion.div>
@@ -137,7 +174,7 @@ export default function ProjectsPage() {
         </section>
 
         {/* Bottom CTA Banner */}
-        <section className="services-cta-banner" style={{ marginTop: '70px' }}>
+        <section className="services-cta-banner" style={{ marginTop: '80px' }}>
           <div className="cta-banner-glow"></div>
           <div className="cta-banner-inner">
             <span className="cta-banner-badge">HAVE A CUSTOM SYSTEM IN MIND? ✦</span>
