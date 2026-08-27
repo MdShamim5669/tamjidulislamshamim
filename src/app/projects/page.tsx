@@ -15,16 +15,14 @@ export default function ProjectsPage() {
   const { data: projects = [], isLoading } = useQuery({
     queryKey: ['projects'],
     queryFn: async () => {
-      try {
-        const res = await api.get('/projects');
-        if (res.data?.data && Array.isArray(res.data.data)) {
-          return res.data.data;
-        }
-      } catch (e) {
-        console.error('Error fetching projects:', e);
+      const res = await api.get('/projects');
+      if (res.data?.data && Array.isArray(res.data.data)) {
+        return res.data.data;
       }
       return [];
     },
+    retry: 3,
+    retryDelay: 2000,
   });
 
   const categories = ['ALL', 'FULL-STACK WEB', 'BACKEND & APIS', 'AI & MACHINE LEARNING', 'AUTONOMOUS AI'];

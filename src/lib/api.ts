@@ -11,19 +11,17 @@ export const api = axios.create({
   headers: {
     'Content-Type': 'application/json',
   },
-  timeout: 15000,
+  timeout: 45000, // 45 seconds to handle Render cold-start without timing out
 });
 
-// Automatic Auth & Content-Type Interceptor
+// Automatic Auth & Dynamic BaseURL Interceptor
 api.interceptors.request.use(
   (config) => {
     if (typeof window !== 'undefined') {
-      if (
-        (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') &&
-        !process.env.NEXT_PUBLIC_API_URL
-      ) {
-        config.baseURL = 'http://localhost:5000/api';
-      }
+      const isLocal = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
+      config.baseURL = isLocal
+        ? 'http://localhost:5000/api'
+        : (process.env.NEXT_PUBLIC_API_URL || 'https://animated-portfolio-server.onrender.com/api');
 
       const token = localStorage.getItem('admin_token');
       const key = localStorage.getItem('admin_cv_key');

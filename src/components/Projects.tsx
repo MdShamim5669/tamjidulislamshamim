@@ -21,16 +21,14 @@ export default function Projects() {
   const { data: projects = [], isLoading } = useQuery({
     queryKey: ['projects'],
     queryFn: async () => {
-      try {
-        const res = await api.get('/projects');
-        if (res.data?.data && Array.isArray(res.data.data)) {
-          return res.data.data;
-        }
-      } catch (e) {
-        console.error('Error loading projects from database:', e);
+      const res = await api.get('/projects');
+      if (res.data?.data && Array.isArray(res.data.data)) {
+        return res.data.data;
       }
       return [];
     },
+    retry: 3,
+    retryDelay: 2000,
   });
 
   const totalDots = Math.max(1, projects.length - 1);
