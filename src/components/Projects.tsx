@@ -7,109 +7,6 @@ import api from '../lib/api';
 import ProjectDetailsModal from './ProjectDetailsModal';
 import TypewriterText from './TypewriterText';
 
-const defaultProjects = [
-  {
-    id: 'p-1',
-    number: '01',
-    title: 'DINEFLOW — ENTERPRISE RESTAURANT & MULTI-VENDOR ECOSYSTEM',
-    subtitle: 'Full-Stack Web App',
-    category: 'Next.js 14, PostgreSQL, Prisma ORM',
-    description: 'Comprehensive restaurant management platform featuring real-time kitchen display, automated meal fare calculations, Stripe payment processing, and multi-tenant store isolation.',
-    bullets: [
-      'Engineered multi-tenant store isolation and dynamic table management.',
-      'Implemented real-time kitchen order display with optimistic state sync.',
-      'Integrated Stripe checkout with sub-2s transaction finality.'
-    ],
-    techStack: ['Next.js 14 App Router', 'TypeScript', 'Node.js', 'PostgreSQL', 'Prisma ORM', 'Stripe', 'Tailwind CSS'],
-    liveUrl: 'https://dineflow.vercel.app',
-    clientUrl: 'https://github.com/MdShamim5669/dineflow',
-    serverUrl: 'https://github.com/MdShamim5669/dineflow-server',
-    githubUrl: 'https://github.com/MdShamim5669/dineflow',
-    image: '/dark_villain_frames_24fps_high_quality/frame_0001.jpg',
-    featured: true
-  },
-  {
-    id: 'p-2',
-    number: '02',
-    title: 'LOGIXPRESS — LOGISTICS & PARCEL SETTLEMENT ENGINE',
-    subtitle: 'Backend & Distributed APIs',
-    category: 'Express.js, PostgreSQL, Resend OTP',
-    description: 'High-throughput parcel tracking and merchant settlement engine with dynamic fare calculation, multi-factor PIN authentication, Resend OTP verification, and SSLCommerz gateway.',
-    bullets: [
-      'Designed dynamic fare calculation engine based on weight and distance matrices.',
-      'Architected multi-factor PIN authentication & Resend OTP email verification.',
-      'Integrated SSLCommerz payment gateway with webhook verification.'
-    ],
-    techStack: ['Express.js', 'PostgreSQL', 'Prisma ORM', 'JWT PIN Security', 'Resend OTP', 'SSLCommerz'],
-    liveUrl: 'https://logixpress.vercel.app',
-    clientUrl: 'https://github.com/MdShamim5669/logixpress-client',
-    serverUrl: 'https://github.com/MdShamim5669/logixpress',
-    githubUrl: 'https://github.com/MdShamim5669/logixpress',
-    image: '/campus_photo.png',
-    featured: true
-  },
-  {
-    id: 'p-3',
-    number: '03',
-    title: 'YOUTH SURVEY OPINION AI — PREDICTIVE INFERENCE ENGINE',
-    subtitle: 'Applied Machine Learning',
-    category: 'Python, Scikit-Learn, FastAPI',
-    description: 'Empirical research pipeline on 317 youth survey opinion dataset achieving 84.4% accuracy using SMOTE balancing + Random Forest & XGBoost ensemble models with FastAPI deployment.',
-    bullets: [
-      'Preprocessed and balanced 317 youth survey responses using SMOTE algorithm.',
-      'Trained and benchmarked Random Forest, XGBoost, and Gradient Boosting ensembles.',
-      'Packaged high-accuracy pipeline into lightweight FastAPI inference endpoints.'
-    ],
-    techStack: ['Python', 'Scikit-Learn', 'XGBoost', 'SMOTE Balancing', 'Pandas', 'FastAPI'],
-    liveUrl: 'https://github.com/MdShamim5669',
-    clientUrl: 'https://github.com/MdShamim5669/opinion-survey-ml',
-    serverUrl: 'https://github.com/MdShamim5669/opinion-survey-ml',
-    githubUrl: 'https://github.com/MdShamim5669/opinion-survey-ml',
-    image: '/dark_villain_frames_24fps_high_quality/frame_0001.jpg',
-    featured: true
-  },
-  {
-    id: 'p-4',
-    number: '04',
-    title: 'ALGORIZIN AI PORTAL — MULTI-AGENT RAG KNOWLEDGE SYSTEM',
-    subtitle: 'Autonomous AI & LLM Systems',
-    category: 'Claude 3.5 Sonnet, ChromaDB, FastAPI',
-    description: 'Enterprise AI knowledge base and interactive portfolio engine with Claude 3.5 Sonnet agent task automation, deterministic JSON validation, and vector chunk indexing.',
-    bullets: [
-      'Architected autonomous agent loop with tool-calling handlers and guardrails.',
-      'Constructed RAG vector indexing pipeline for zero-latency retrieval.',
-      'Deployed on high-availability container cluster with sub-second response times.'
-    ],
-    techStack: ['Claude 3.5', 'Next.js 14', 'Python', 'FastAPI', 'ChromaDB', 'Tailwind CSS'],
-    liveUrl: 'https://github.com/MdShamim5669',
-    clientUrl: 'https://github.com/MdShamim5669',
-    serverUrl: 'https://github.com/MdShamim5669',
-    githubUrl: 'https://github.com/MdShamim5669',
-    image: '/campus_photo.png',
-    featured: true
-  },
-  {
-    id: 'p-5',
-    number: '05',
-    title: 'OMNICOMMERCE CLOUD — HIGH-SCALE DISTRIBUTED STOREFRONT',
-    subtitle: 'Cloud Microservices',
-    category: 'Redis Pub/Sub, Node.js, GraphQL',
-    description: 'Distributed microservices e-commerce infrastructure with Redis event bus, Redis session caching, and sub-second inventory sync across multi-region edge nodes.',
-    bullets: [
-      'Engineered distributed lock mechanism with Redis for zero inventory oversell.',
-      'Implemented async pub/sub queue for order processing pipeline.',
-      'Benchmarked 10k req/sec throughput under peak load.'
-    ],
-    techStack: ['Node.js', 'Redis', 'Docker', 'PostgreSQL', 'GraphQL', 'Next.js 14'],
-    liveUrl: 'https://github.com/MdShamim5669',
-    clientUrl: 'https://github.com/MdShamim5669',
-    serverUrl: 'https://github.com/MdShamim5669',
-    githubUrl: 'https://github.com/MdShamim5669',
-    image: '/dark_villain_frames_24fps_high_quality/frame_0001.jpg',
-    featured: true
-  }
-];
-
 export default function Projects() {
   const [selectedProject, setSelectedProject] = useState<any | null>(null);
   const [activeDot, setActiveDot] = useState(0);
@@ -120,23 +17,21 @@ export default function Projects() {
   const scrollLeftStart = useRef(0);
   const hasMoved = useRef(false);
 
-  // TanStack Query for dynamic projects from backend
-  const { data: serverProjects } = useQuery({
+  // TanStack Query for dynamic projects directly from PostgreSQL backend
+  const { data: projects = [], isLoading } = useQuery({
     queryKey: ['projects'],
     queryFn: async () => {
       try {
         const res = await api.get('/projects');
-        if (res.data?.data && Array.isArray(res.data.data) && res.data.data.length > 0) {
+        if (res.data?.data && Array.isArray(res.data.data)) {
           return res.data.data;
         }
       } catch (e) {
-        // Fallback
+        console.error('Error loading projects from database:', e);
       }
-      return null;
+      return [];
     },
   });
-
-  const projects = serverProjects && serverProjects.length > 0 ? serverProjects : defaultProjects;
 
   const totalDots = Math.max(1, projects.length - 1);
 

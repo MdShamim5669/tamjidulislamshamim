@@ -7,150 +7,25 @@ import { useQuery } from '@tanstack/react-query';
 import api from '../../lib/api';
 import ProjectDetailsModal from '../../components/ProjectDetailsModal';
 
-const defaultAllProjects = [
-  {
-    id: 'p-1',
-    number: '01',
-    title: 'DineFlow',
-    subtitle: 'Restaurant Management & POS Engine',
-    category: 'FULL-STACK WEB',
-    description: 'Comprehensive restaurant management platform featuring real-time kitchen display, automated meal fare calculations, Stripe payment processing, and multi-tenant store isolation.',
-    bullets: [
-      'Engineered multi-tenant store isolation and dynamic table management.',
-      'Implemented real-time kitchen order display with optimistic state sync.',
-      'Integrated Stripe checkout with sub-2s transaction finality.'
-    ],
-    techStack: ['Next.js 14', 'TypeScript', 'Node.js', 'PostgreSQL', 'Prisma ORM', 'Stripe'],
-    liveUrl: 'https://dineflow.vercel.app',
-    clientUrl: 'https://github.com/MdShamim5669/dineflow',
-    serverUrl: 'https://github.com/MdShamim5669/dineflow-server',
-    githubUrl: 'https://github.com/MdShamim5669/dineflow',
-    image: '/dark_villain_frames_24fps_high_quality/frame_0001.jpg',
-    featured: true
-  },
-  {
-    id: 'p-2',
-    number: '02',
-    title: 'LogiXpress',
-    subtitle: 'Logistics & Merchant Settlement Engine',
-    category: 'BACKEND & APIS',
-    description: 'High-throughput parcel tracking and merchant settlement engine with dynamic fare calculation, multi-factor PIN authentication, Resend OTP verification, and SSLCommerz gateway.',
-    bullets: [
-      'Designed dynamic fare calculation engine based on weight and distance matrices.',
-      'Architected multi-factor PIN authentication & Resend OTP email verification.',
-      'Integrated SSLCommerz payment gateway with webhook verification.'
-    ],
-    techStack: ['Express.js', 'PostgreSQL', 'Prisma ORM', 'JWT PIN Security', 'Resend OTP', 'SSLCommerz'],
-    liveUrl: 'https://logixpress.vercel.app',
-    clientUrl: 'https://github.com/MdShamim5669/logixpress-client',
-    serverUrl: 'https://github.com/MdShamim5669/logixpress',
-    githubUrl: 'https://github.com/MdShamim5669/logixpress',
-    image: '/campus_photo.png',
-    featured: true
-  },
-  {
-    id: 'p-3',
-    number: '03',
-    title: 'Youth Survey Opinion AI',
-    subtitle: 'Predictive Research & ML Pipeline',
-    category: 'AI & MACHINE LEARNING',
-    description: 'Empirical research pipeline on 317 youth survey opinion dataset achieving 84.4% accuracy using SMOTE balancing + Random Forest & XGBoost ensemble models with FastAPI deployment.',
-    bullets: [
-      'Preprocessed and balanced 317 youth survey responses using SMOTE algorithm.',
-      'Trained and benchmarked Random Forest, XGBoost, and Gradient Boosting ensembles.',
-      'Packaged high-accuracy pipeline into lightweight FastAPI inference endpoints.'
-    ],
-    techStack: ['Python', 'Scikit-Learn', 'XGBoost', 'SMOTE Balancing', 'Pandas', 'FastAPI'],
-    liveUrl: 'https://github.com/MdShamim5669',
-    clientUrl: 'https://github.com/MdShamim5669/opinion-survey-ml',
-    serverUrl: 'https://github.com/MdShamim5669/opinion-survey-ml',
-    githubUrl: 'https://github.com/MdShamim5669/opinion-survey-ml',
-    image: '/dark_villain_frames_24fps_high_quality/frame_0001.jpg',
-    featured: true
-  },
-  {
-    id: 'p-4',
-    number: '04',
-    title: 'Algorizin AI Portal',
-    subtitle: 'Multi-Agent RAG Knowledge System',
-    category: 'AUTONOMOUS AI',
-    description: 'Enterprise AI knowledge base and interactive portfolio engine with Claude 3.5 Sonnet agent task automation, deterministic JSON validation, and vector chunk indexing.',
-    bullets: [
-      'Architected autonomous agent loop with tool-calling handlers and guardrails.',
-      'Constructed RAG vector indexing pipeline for zero-latency retrieval.',
-      'Deployed on high-availability container cluster with sub-second response times.'
-    ],
-    techStack: ['Claude 3.5', 'Next.js 14', 'Python', 'FastAPI', 'ChromaDB', 'Tailwind CSS'],
-    liveUrl: 'https://github.com/MdShamim5669',
-    clientUrl: 'https://github.com/MdShamim5669',
-    serverUrl: 'https://github.com/MdShamim5669',
-    githubUrl: 'https://github.com/MdShamim5669',
-    image: '/campus_photo.png',
-    featured: true
-  },
-  {
-    id: 'p-5',
-    number: '05',
-    title: 'OmniCommerce Cloud',
-    subtitle: 'High-Scale Distributed Storefront',
-    category: 'FULL-STACK WEB',
-    description: 'Distributed microservices e-commerce infrastructure with Redis event bus, Redis session caching, and sub-second inventory sync across multi-region edge nodes.',
-    bullets: [
-      'Engineered distributed lock mechanism with Redis for zero inventory oversell.',
-      'Implemented async pub/sub queue for order processing pipeline.',
-      'Benchmarked 10k req/sec throughput under peak load.'
-    ],
-    techStack: ['Node.js', 'Redis', 'Docker', 'PostgreSQL', 'GraphQL', 'Next.js 14'],
-    liveUrl: 'https://github.com/MdShamim5669',
-    clientUrl: 'https://github.com/MdShamim5669',
-    serverUrl: 'https://github.com/MdShamim5669',
-    githubUrl: 'https://github.com/MdShamim5669',
-    image: '/dark_villain_frames_24fps_high_quality/frame_0001.jpg',
-    featured: true
-  },
-  {
-    id: 'p-6',
-    number: '06',
-    title: 'MediScan Vision AI',
-    subtitle: 'Clinical Diagnostic Imaging Model',
-    category: 'AI & MACHINE LEARNING',
-    description: 'Medical computer vision pipeline utilizing transfer learning with EfficientNet-B4 for rapid radiological anomaly localization and confidence classification.',
-    bullets: [
-      'Fine-tuned PyTorch convolutional network on 12k annotated radiological scans.',
-      'Engineered Grad-CAM visual heatmap explanation overlay for clinician review.',
-      'Achieved 96.2% validation sensitivity on test holdout benchmark.'
-    ],
-    techStack: ['PyTorch', 'TorchVision', 'Python', 'FastAPI', 'NumPy', 'OpenCV'],
-    liveUrl: 'https://github.com/MdShamim5669',
-    clientUrl: 'https://github.com/MdShamim5669',
-    serverUrl: 'https://github.com/MdShamim5669',
-    githubUrl: 'https://github.com/MdShamim5669',
-    image: '/campus_photo.png',
-    featured: true
-  }
-];
-
 export default function ProjectsPage() {
   const [selectedCategory, setSelectedCategory] = useState('ALL');
   const [selectedProject, setSelectedProject] = useState<any | null>(null);
 
-  // TanStack Query for dynamic projects from backend
-  const { data: serverProjects } = useQuery({
+  // TanStack Query for dynamic projects directly from PostgreSQL backend
+  const { data: projects = [], isLoading } = useQuery({
     queryKey: ['projects'],
     queryFn: async () => {
       try {
         const res = await api.get('/projects');
-        if (res.data?.data && Array.isArray(res.data.data) && res.data.data.length > 0) {
+        if (res.data?.data && Array.isArray(res.data.data)) {
           return res.data.data;
         }
       } catch (e) {
-        // Fallback
+        console.error('Error fetching projects:', e);
       }
-      return null;
+      return [];
     },
   });
-
-  const projects = serverProjects && serverProjects.length > 0 ? serverProjects : defaultAllProjects;
 
   const categories = ['ALL', 'FULL-STACK WEB', 'BACKEND & APIS', 'AI & MACHINE LEARNING', 'AUTONOMOUS AI'];
 
