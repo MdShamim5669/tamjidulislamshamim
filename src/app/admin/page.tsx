@@ -1353,6 +1353,19 @@ export default function AdminDashboard() {
                         </div>
                       </div>
 
+                      <div className="form-row">
+                        <div className="admin-field-group">
+                          <label className="admin-field-label">INSTAGRAM PROFILE URL</label>
+                          <input
+                            type="text"
+                            className="admin-form-input"
+                            value={settingsForm.instagramUrl || ''}
+                            onChange={(e) => setSettingsForm({ ...settingsForm, instagramUrl: e.target.value })}
+                            placeholder="https://www.instagram.com/sh4mim.py/"
+                          />
+                        </div>
+                      </div>
+
                       <button type="submit" className="admin-primary-btn" style={{ width: 'fit-content', padding: '0 32px' }}>
                         <span>Save Settings Live ✦</span>
                       </button>

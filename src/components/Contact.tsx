@@ -87,8 +87,8 @@ export default function Contact() {
 
   const adminEmail = (settings?.adminEmail || 'tamjidulislamsamim@gmail.com').toUpperCase();
   const location = (settings?.location || 'Dhaka, Bangladesh').toUpperCase();
-  const instagramTag = '@SHAMIM__5669';
-  const instagramUrl = settings?.instagramUrl || 'https://www.instagram.com/shamim__5669/';
+  const instagramTag = '@SH4MIM.PY';
+  const instagramUrl = settings?.instagramUrl || 'https://www.instagram.com/sh4mim.py/';
 
   return (
     <>

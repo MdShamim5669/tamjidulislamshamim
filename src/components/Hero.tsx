@@ -250,7 +250,7 @@ export default function Hero() {
 
               {/* Instagram */}
               <a
-                href={settings?.instagramUrl || 'https://instagram.com'}
+                href={settings?.instagramUrl || 'https://www.instagram.com/sh4mim.py/'}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="hero-social-circle"
