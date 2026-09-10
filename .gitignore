@@ -24,7 +24,13 @@ yarn-debug.log*
 yarn-error.log*
 
 # Local Env Files
+.env
 .env*.local
+
+# Agent & IDE config
+.agent/
+.agents/
+antigravity-skill-creator.md
 
 # Vercel
 .vercel

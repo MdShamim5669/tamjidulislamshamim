@@ -5,7 +5,7 @@ import Link from 'next/link';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useQuery } from '@tanstack/react-query';
 import api, { getAssetUrl } from '../lib/api';
-import TypewriterText from './TypewriterText';
+import PerspectiveRollText from './animations/PerspectiveRollText';
 
 const defaultServices = [
   {
@@ -113,7 +113,7 @@ export default function Services() {
         <div className="ref-header-left">
           <span className="ref-eyebrow-dash">— My Specialization</span>
           <h2 className="ref-services-title">
-            <TypewriterText
+            <PerspectiveRollText
               text="Services I Provide"
               highlightWord="Services"
               highlightClass="ref-title-accent"

@@ -3,7 +3,7 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import api from '../lib/api';
-import TypewriterText from './TypewriterText';
+import BlurRevealText from './animations/BlurRevealText';
 
 const defaultEducations = [
   {
@@ -113,7 +113,7 @@ export default function Education() {
         </div>
 
         <h2 className="ref-edu-main-title">
-          <TypewriterText
+          <BlurRevealText
             text="Education & Process"
             highlightWord="Process"
             highlightClass="ref-edu-title-accent"

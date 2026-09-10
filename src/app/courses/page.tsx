@@ -11,11 +11,16 @@ export default function CoursesPage() {
   const { data: courses = [], isLoading } = useQuery({
     queryKey: ['courses'],
     queryFn: async () => {
-      const res = await api.get('/courses');
-      if (res.data?.data && Array.isArray(res.data.data)) {
-        return res.data.data;
+      try {
+        const res = await api.get('/courses');
+        if (res.data?.data && Array.isArray(res.data.data)) {
+          return res.data.data;
+        }
+        return [];
+      } catch (err) {
+        console.error('Failed to fetch courses from backend:', err);
+        return [];
       }
-      return [];
     },
     retry: 3,
     retryDelay: 2000,

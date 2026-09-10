@@ -1,10 +1,7 @@
 import axios from 'axios';
 
 export const API_BASE_URL =
-  process.env.NEXT_PUBLIC_API_URL ||
-  (typeof window !== 'undefined' && (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1')
-    ? 'http://localhost:5000/api'
-    : 'https://animated-portfolio-server.onrender.com/api');
+  process.env.NEXT_PUBLIC_API_URL || 'https://animated-portfolio-server.onrender.com/api';
 
 export const api = axios.create({
   baseURL: API_BASE_URL,
@@ -17,12 +14,9 @@ export const api = axios.create({
 // Automatic Auth & Dynamic BaseURL Interceptor
 api.interceptors.request.use(
   (config) => {
-    if (typeof window !== 'undefined') {
-      const isLocal = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
-      config.baseURL = isLocal
-        ? 'http://localhost:5000/api'
-        : (process.env.NEXT_PUBLIC_API_URL || 'https://animated-portfolio-server.onrender.com/api');
+    config.baseURL = process.env.NEXT_PUBLIC_API_URL || 'https://animated-portfolio-server.onrender.com/api';
 
+    if (typeof window !== 'undefined') {
       const token = localStorage.getItem('admin_token');
       const key = localStorage.getItem('admin_cv_key');
 
@@ -61,10 +55,7 @@ export const getAssetUrl = (url?: string | null, fallback: string = '/dark_villa
   }
   
   if (trimmed.startsWith('/uploads')) {
-    const isLocal = typeof window !== 'undefined' && (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1');
-    const backendOrigin = isLocal
-      ? 'http://localhost:5000'
-      : (process.env.NEXT_PUBLIC_API_URL ? process.env.NEXT_PUBLIC_API_URL.replace(/\/api\/?$/, '') : 'https://animated-portfolio-server.onrender.com');
+    const backendOrigin = (process.env.NEXT_PUBLIC_API_URL || 'https://animated-portfolio-server.onrender.com/api').replace(/\/api\/?$/, '');
     return `${backendOrigin}${trimmed}`;
   }
   

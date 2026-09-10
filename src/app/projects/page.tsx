@@ -15,11 +15,16 @@ export default function ProjectsPage() {
   const { data: projects = [], isLoading } = useQuery({
     queryKey: ['projects'],
     queryFn: async () => {
-      const res = await api.get('/projects');
-      if (res.data?.data && Array.isArray(res.data.data)) {
-        return res.data.data;
+      try {
+        const res = await api.get('/projects');
+        if (res.data?.data && Array.isArray(res.data.data)) {
+          return res.data.data;
+        }
+        return [];
+      } catch (err) {
+        console.error('Failed to fetch projects from backend:', err);
+        return [];
       }
-      return [];
     },
     retry: 3,
     retryDelay: 2000,

@@ -3,7 +3,7 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import api from '../lib/api';
-import TypewriterText from './TypewriterText';
+import SplitLineRevealText, { RoleShimmerText } from './animations/SplitLineRevealText';
 
 const defaultExperiences = [
   {
@@ -87,8 +87,7 @@ export default function Experience() {
         </div>
 
         <h2 className="ref-exp-main-title">
-          Work <span className="ref-exp-title-accent">Experience</span>
-          <span className="ref-exp-cursor-pipe">|</span>
+          <SplitLineRevealText firstWord="Work" accentWord="Experience" />
         </h2>
       </div>
 
@@ -143,7 +142,7 @@ export default function Experience() {
 
                   {/* High-Impact Role Title */}
                   <h3 className="ref-exp-role-title">
-                    <TypewriterText text={exp.role || 'AI Content Development Intern'} />
+                    <RoleShimmerText text={exp.role || 'AI Content Development Intern'} />
                   </h3>
 
                   {/* Overview Editorial Paragraph */}

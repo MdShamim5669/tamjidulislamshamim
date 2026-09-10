@@ -199,11 +199,16 @@ export default function Hero() {
 
         {/* Hero Right Column (Ultra-Minimalist Executive Bio + Social Links) */}
         <div className="hero-col hero-col-right">
-          <div className="hero-bio-card">
+          <motion.div
+            className="hero-bio-card"
+            initial={{ opacity: 0, y: 18 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.9, delay: 0.5, ease: [0.16, 1, 0.3, 1] }}
+          >
             <p className="hero-bio-text">
               Hi, I'm <strong className="hero-highlight">{settings?.siteTitle || 'Md. Samim'}</strong> — an <strong>AI &amp; Backend Engineer</strong> building scalable backends, high-performance web systems, and autonomous AI workflows.
             </p>
-          </div>
+          </motion.div>
 
           {/* Follow Me Social Links */}
           <div className="hero-social-wrap">

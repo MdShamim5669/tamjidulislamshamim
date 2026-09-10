@@ -7,6 +7,7 @@ import api from '../lib/api';
 import CelebrationModal from './CelebrationModal';
 import VisitingCardModal from './VisitingCardModal';
 import SendMessageModal from './SendMessageModal';
+import AmbientGlowText from './animations/AmbientGlowText';
 
 export default function Contact() {
   const [formData, setFormData] = useState({
@@ -97,10 +98,7 @@ export default function Contact() {
         <div className="ref-footer-container">
           {/* Cell 1: Heading Block */}
           <div className="ref-footer-cell cell-heading">
-            <h2 className="ref-main-title">
-              LET'S CREATE<br />SOMETHING
-            </h2>
-            <span className="ref-cursive-script">Amazing</span>
+            <AmbientGlowText line1="LET'S CREATE" line2="SOMETHING" scriptWord="Amazing" />
           </div>
 
           {/* Cell 2: Status & Message Trigger (Opens Modal) */}

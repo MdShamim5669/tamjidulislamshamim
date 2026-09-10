@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
+import ScrambleText from './animations/ScrambleText';
 
 type SkillCategory = 'frontend' | 'backend' | 'ai';
 
@@ -61,10 +62,11 @@ export default function Skills() {
       {/* Section Top Editorial Header */}
       <div className="section-header">
         <div className="section-title">
-          <span>SKILLS &amp; PROFICIENCY</span>
-          <span className="sparkle">✦</span>
+          <ScrambleText text="SKILLS & PROFICIENCY" sparkle="✦" />
         </div>
-        <span className="section-tag">ENGINEERING COMPETENCIES</span>
+        <span className="section-tag">
+          <ScrambleText text="ENGINEERING COMPETENCIES" sparkle="" durationMs={1200} />
+        </span>
       </div>
 
       {/* 100% Seamless Continuous Infinite Marquee Header */}
