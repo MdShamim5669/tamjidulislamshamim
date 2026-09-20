@@ -2,6 +2,7 @@
 
 import React, { useState } from 'react';
 import ScrambleText from './animations/ScrambleText';
+import AnimateNumber from './animations/AnimateNumber';
 
 type SkillCategory = 'frontend' | 'backend' | 'ai';
 
@@ -160,7 +161,11 @@ export default function Skills() {
 
                   {/* Percentage Value Centered */}
                   <div className="gauge-center-val">
-                    <span className="percent-num">{skill.percentage}%</span>
+                    <span className="percent-num">
+                      <AnimateNumber key={`${activeTab}-${index}-${skill.percentage}`}>
+                        {skill.percentage}%
+                      </AnimateNumber>
+                    </span>
                   </div>
                 </div>
 

@@ -246,7 +246,7 @@ export default function AdminDashboard() {
       queryClient.invalidateQueries();
     },
     onError: (err: any) => {
-      const msg = err.response?.data?.message || (err.message === 'Network Error' ? 'Network Error: Cannot connect to server. If Render server was sleeping, please retry in 10-20 seconds.' : err.message) || 'Operation failed';
+      const msg = err.response?.data?.message || (err.message === 'Network Error' ? 'Network Error: Cannot connect to server. Please check backend status or retry in a few seconds.' : err.message) || 'Operation failed';
       toast.error('Save Error', { description: msg });
     }
   });

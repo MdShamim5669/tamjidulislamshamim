@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 export const API_BASE_URL =
-  process.env.NEXT_PUBLIC_API_URL || 'https://animated-portfolio-server.onrender.com/api';
+  process.env.NEXT_PUBLIC_API_URL || 'https://animated-portfolio-server-production.up.railway.app/api';
 
 export const api = axios.create({
   baseURL: API_BASE_URL,
@@ -14,7 +14,7 @@ export const api = axios.create({
 // Automatic Auth & Dynamic BaseURL Interceptor
 api.interceptors.request.use(
   (config) => {
-    config.baseURL = process.env.NEXT_PUBLIC_API_URL || 'https://animated-portfolio-server.onrender.com/api';
+    config.baseURL = process.env.NEXT_PUBLIC_API_URL || 'https://animated-portfolio-server-production.up.railway.app/api';
 
     if (typeof window !== 'undefined') {
       const token = localStorage.getItem('admin_token');
@@ -55,7 +55,7 @@ export const getAssetUrl = (url?: string | null, fallback: string = '/dark_villa
   }
   
   if (trimmed.startsWith('/uploads')) {
-    const backendOrigin = (process.env.NEXT_PUBLIC_API_URL || 'https://animated-portfolio-server.onrender.com/api').replace(/\/api\/?$/, '');
+    const backendOrigin = (process.env.NEXT_PUBLIC_API_URL || 'https://animated-portfolio-server-production.up.railway.app/api').replace(/\/api\/?$/, '');
     return `${backendOrigin}${trimmed}`;
   }
   
