@@ -6,7 +6,6 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { useQuery } from '@tanstack/react-query';
 import api, { getAssetUrl } from '../lib/api';
 import PerspectiveRollText from './animations/PerspectiveRollText';
-import ScrollStack, { ScrollStackItem } from './ui/ScrollStack';
 
 const defaultServices = [
   {
@@ -130,8 +129,8 @@ export default function Services() {
         </div>
       </div>
 
-      {/* Scroll Stack Container */}
-      <ScrollStack className="ref-accordion-stack">
+      {/* Accordion Stack Container */}
+      <div className="ref-accordion-stack">
         {displayedServices.map((service: any, index: number) => {
           const isExpanded = expandedIndex === index;
           const serviceNum = service.number?.includes('.') ? service.number : `0${index + 1}.`;
@@ -140,17 +139,12 @@ export default function Services() {
             : (typeof service.tags === 'string' ? service.tags.split(',').map((t: string) => t.trim()).filter(Boolean) : []);
 
           return (
-            <ScrollStackItem
+            <motion.div
+              layout
               key={service.id || index}
-              index={index}
-              total={displayedServices.length}
-              topOffset={90}
+              className={`ref-service-card ${isExpanded ? 'card-is-expanded' : 'card-is-collapsed'}`}
+              transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
             >
-              <motion.div
-                layout
-                className={`ref-service-card ${isExpanded ? 'card-is-expanded' : 'card-is-collapsed'}`}
-                transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
-              >
               {/* Row Header (Clickable Trigger) */}
               <div
                 className="ref-card-trigger"
@@ -252,11 +246,10 @@ export default function Services() {
                   </motion.div>
                 )}
               </AnimatePresence>
-              </motion.div>
-            </ScrollStackItem>
+            </motion.div>
           );
         })}
-      </ScrollStack>
+      </div>
 
       {/* Bottom Action Pill Button (Matches Reference) */}
       <div className="ref-services-bottom-row">
