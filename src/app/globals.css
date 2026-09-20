@@ -8370,33 +8370,33 @@ body {
   position: relative;
 }
 
-/* Collapsed State: Pure Transparent Glass Capsule */
+/* Collapsed State: Luxury Frosted Glass Capsule */
 .card-is-collapsed {
-  background: transparent !important;
-  border: 1px solid rgba(255, 255, 255, 0.14) !important;
+  background: rgba(14, 14, 18, 0.92) !important;
+  border: 1px solid rgba(255, 255, 255, 0.12) !important;
   border-radius: 18px;
   padding: 20px 30px;
-  backdrop-filter: none !important;
-  -webkit-backdrop-filter: none !important;
-  box-shadow: none !important;
+  backdrop-filter: blur(24px) !important;
+  -webkit-backdrop-filter: blur(24px) !important;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5) !important;
 }
 
 .card-is-collapsed:hover {
-  background: rgba(255, 255, 255, 0.04) !important;
-  border-color: rgba(245, 158, 11, 0.5) !important;
+  background: rgba(22, 22, 28, 0.96) !important;
+  border-color: rgba(245, 158, 11, 0.6) !important;
   transform: translateY(-2px);
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4) !important;
+  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.65) !important;
 }
 
-/* Expanded State: Pure Transparent Container with Glowing Border */
+/* Expanded State: Dark Frosted Glass Container with Glowing Border */
 .card-is-expanded {
-  background: transparent !important;
-  border: 1px solid rgba(230, 57, 70, 0.45) !important;
+  background: rgba(16, 16, 22, 0.96) !important;
+  border: 1px solid rgba(230, 57, 70, 0.5) !important;
   border-radius: 18px;
   padding: 28px 34px 34px 34px;
-  backdrop-filter: none !important;
-  -webkit-backdrop-filter: none !important;
-  box-shadow: 0 0 35px rgba(230, 57, 70, 0.12) !important;
+  backdrop-filter: blur(28px) !important;
+  -webkit-backdrop-filter: blur(28px) !important;
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.75), 0 0 35px rgba(230, 57, 70, 0.15) !important;
 }
 
 /* Trigger Row */
