@@ -162,7 +162,7 @@ export default function Skills() {
                   {/* Percentage Value Centered */}
                   <div className="gauge-center-val">
                     <span className="percent-num">
-                      <AnimateNumber key={`${activeTab}-${index}-${skill.percentage}`}>
+                      <AnimateNumber key={`${activeTab}-${index}-${skill.percentage}`} value={skill.percentage}>
                         {skill.percentage}%
                       </AnimateNumber>
                     </span>

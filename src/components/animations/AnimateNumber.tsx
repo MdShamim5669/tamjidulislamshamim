@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { useInView, animate } from 'framer-motion';
 
 interface AnimateNumberProps {
@@ -14,10 +14,48 @@ interface AnimateNumberProps {
   style?: React.CSSProperties;
 }
 
+function parseTarget(input: any, explicitVal?: any, explicitSuffix?: string): { target: number; suffix: string } {
+  let target = 0;
+  let suffix = explicitSuffix || '';
+
+  if (explicitVal !== undefined && explicitVal !== null) {
+    if (typeof explicitVal === 'number') target = explicitVal;
+    else if (typeof explicitVal === 'string') {
+      const match = explicitVal.match(/([0-9.-]+)/);
+      if (match) target = parseFloat(match[1]);
+      if (explicitVal.includes('%') && !suffix) suffix = '%';
+    }
+    return { target, suffix };
+  }
+
+  if (Array.isArray(input)) {
+    for (const item of input) {
+      if (typeof item === 'number') {
+        target = item;
+      } else if (typeof item === 'string') {
+        const match = item.match(/([0-9.-]+)/);
+        if (match && !target) target = parseFloat(match[1]);
+        if (item.includes('%') && !suffix) suffix = '%';
+      }
+    }
+    return { target, suffix };
+  }
+
+  if (typeof input === 'number') {
+    target = input;
+  } else if (typeof input === 'string') {
+    const match = input.match(/([0-9.-]+)/);
+    if (match) target = parseFloat(match[1]);
+    if (input.includes('%') && !suffix) suffix = '%';
+  }
+
+  return { target, suffix };
+}
+
 export default function AnimateNumber({
   children,
   value,
-  duration = 1.2,
+  duration = 1.3,
   delay = 0,
   prefix = '',
   suffix = '',
@@ -25,53 +63,29 @@ export default function AnimateNumber({
   style,
 }: AnimateNumberProps) {
   const ref = useRef<HTMLSpanElement>(null);
-  const inView = useInView(ref, { once: false, margin: '-20px' });
+  const inView = useInView(ref, { once: false, amount: 0.2 });
 
-  // Resolve target value and detect potential percentage/symbol suffixes in string children
-  const rawInput = value !== undefined ? value : children;
-  
-  let targetNumber = 0;
-  let detectedSuffix = suffix;
+  const { target, suffix: parsedSuffix } = parseTarget(children, value, suffix);
+  const finalSuffix = suffix || parsedSuffix;
 
-  if (typeof rawInput === 'number') {
-    targetNumber = rawInput;
-  } else if (typeof rawInput === 'string') {
-    if (rawInput.includes('%') && !detectedSuffix) {
-      detectedSuffix = '%';
-    }
-    const cleanStr = rawInput.replace(/[^0-9.-]/g, '');
-    targetNumber = parseFloat(cleanStr) || 0;
-  } else if (React.isValidElement(rawInput)) {
-    // If child is wrapped or contains nested text
-    targetNumber = Number(value) || 0;
-  }
+  const [displayNum, setDisplayNum] = useState(0);
 
   useEffect(() => {
-    const node = ref.current;
-    if (!node) return;
-
-    if (!inView) {
-      node.textContent = `${prefix}0${detectedSuffix}`;
-      return;
-    }
-
-    const controls = animate(0, targetNumber, {
+    const controls = animate(0, target, {
       duration,
       delay,
-      ease: [0.16, 1, 0.3, 1], // Luxury cubic ease-out
-      onUpdate(latest) {
-        if (node) {
-          node.textContent = `${prefix}${Math.round(latest)}${detectedSuffix}`;
-        }
+      ease: [0.16, 1, 0.3, 1], // Smooth luxury ease-out
+      onUpdate: (latest) => {
+        setDisplayNum(Math.round(latest));
       },
     });
 
     return () => controls.stop();
-  }, [targetNumber, inView, duration, delay, prefix, detectedSuffix]);
+  }, [target, inView, duration, delay]);
 
   return (
     <span ref={ref} className={className} style={style}>
-      {prefix}{targetNumber}{detectedSuffix}
+      {prefix}{displayNum}{finalSuffix}
     </span>
   );
 }
