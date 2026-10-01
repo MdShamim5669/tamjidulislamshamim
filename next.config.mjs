@@ -16,6 +16,7 @@ const nextConfig = {
             { protocol: 'https', hostname: 'res.cloudinary.com' },
             { protocol: 'https', hostname: 'images.unsplash.com' },
             { protocol: 'https', hostname: 'animated-portfolio-server-production.up.railway.app' },
+            { protocol: 'https', hostname: 'animated-portfolio-server-1.onrender.com' },
           ],
         },
       }
@@ -29,6 +30,7 @@ const nextConfig = {
             { protocol: 'https', hostname: 'res.cloudinary.com' },
             { protocol: 'https', hostname: 'images.unsplash.com' },
             { protocol: 'https', hostname: 'animated-portfolio-server-production.up.railway.app' },
+            { protocol: 'https', hostname: 'animated-portfolio-server-1.onrender.com' },
           ],
         },
       }
@@ -38,6 +40,7 @@ const nextConfig = {
             { protocol: 'https', hostname: 'res.cloudinary.com' },
             { protocol: 'https', hostname: 'images.unsplash.com' },
             { protocol: 'https', hostname: 'animated-portfolio-server-production.up.railway.app' },
+            { protocol: 'https', hostname: 'animated-portfolio-server-1.onrender.com' },
           ],
         },
       }),
