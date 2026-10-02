@@ -80,10 +80,13 @@ export default function CanvasSequence() {
       ctx.drawImage(img, offsetX, offsetY, drawWidth, drawHeight);
     }
 
-    // Preload all 240 frames
-    for (let i = 1; i <= TOTAL_FRAMES; i++) {
+    const INITIAL_BURST_FRAMES = 16;
+    let isRevealed = false;
+
+    // Helper to safely load one frame
+    function loadSingleFrame(frameNumber: number, onComplete?: () => void) {
       const img = new Image();
-      const frameIndex = i - 1;
+      const frameIndex = frameNumber - 1;
 
       img.onload = () => {
         loaded++;
@@ -94,22 +97,54 @@ export default function CanvasSequence() {
           renderFrame(0);
         }
 
-        if (loaded === TOTAL_FRAMES) {
-          setIsLoaded(true);
+        if (loaded >= INITIAL_BURST_FRAMES && !isRevealed) {
+          isRevealed = true;
+          setTimeout(() => setIsLoaded(true), 300);
         }
+
+        if (onComplete) onComplete();
       };
 
       img.onerror = () => {
         loaded++;
         setLoadedCount(loaded);
-        if (loaded === TOTAL_FRAMES) {
-          setIsLoaded(true);
+        if (loaded >= INITIAL_BURST_FRAMES && !isRevealed) {
+          isRevealed = true;
+          setTimeout(() => setIsLoaded(true), 300);
         }
+        if (onComplete) onComplete();
       };
 
-      img.src = getFramePath(i);
-      images.push(img);
+      img.src = getFramePath(frameNumber);
+      images[frameIndex] = img;
     }
+
+    // Step 1: Immediately download the initial 16 critical frames for ultra-fast instant unlock (<1.2s)
+    for (let i = 1; i <= INITIAL_BURST_FRAMES; i++) {
+      loadSingleFrame(i);
+    }
+
+    // Step 2: Stream remaining frames smoothly in non-blocking batches in the background
+    let nextFrameToLoad = INITIAL_BURST_FRAMES + 1;
+    const BATCH_SIZE = 8;
+
+    function streamRemainingFrames() {
+      if (nextFrameToLoad > TOTAL_FRAMES) return;
+
+      const batchEnd = Math.min(TOTAL_FRAMES, nextFrameToLoad + BATCH_SIZE);
+      for (let i = nextFrameToLoad; i < batchEnd; i++) {
+        loadSingleFrame(i);
+      }
+      nextFrameToLoad = batchEnd;
+
+      if (nextFrameToLoad <= TOTAL_FRAMES) {
+        setTimeout(streamRemainingFrames, 50);
+      }
+    }
+
+    // Start background streaming after a short pause so page layout and fonts settle first
+    setTimeout(streamRemainingFrames, 600);
+
     imagesRef.current = images;
 
     // Timeline Scroll animations for Education & Experience
@@ -221,9 +256,24 @@ export default function CanvasSequence() {
     // Butter-smooth rAF Lerp Loop (0.12 smoothing factor)
     function animate() {
       currentFrame += (targetFrame - currentFrame) * 0.12;
-      const frameToDraw = Math.round(currentFrame);
+      let frameToDraw = Math.round(currentFrame);
+      if (frameToDraw < 0) frameToDraw = 0;
+      if (frameToDraw >= TOTAL_FRAMES) frameToDraw = TOTAL_FRAMES - 1;
 
-      if (frameToDraw !== lastDrawnFrame && images[frameToDraw] && images[frameToDraw].complete) {
+      // If exact frame is still background-streaming, fallback to nearest available frame
+      if (!images[frameToDraw] || !images[frameToDraw].complete) {
+        for (let offset = 1; offset <= 30; offset++) {
+          if (frameToDraw - offset >= 0 && images[frameToDraw - offset]?.complete) {
+            frameToDraw = frameToDraw - offset;
+            break;
+          } else if (frameToDraw + offset < TOTAL_FRAMES && images[frameToDraw + offset]?.complete) {
+            frameToDraw = frameToDraw + offset;
+            break;
+          }
+        }
+      }
+
+      if (frameToDraw !== lastDrawnFrame && images[frameToDraw]?.complete) {
         renderFrame(frameToDraw);
         lastDrawnFrame = frameToDraw;
       }
@@ -243,7 +293,7 @@ export default function CanvasSequence() {
     };
   }, []);
 
-  const progressPercent = Math.floor((loadedCount / TOTAL_FRAMES) * 100);
+  const progressPercent = Math.min(100, Math.floor((loadedCount / 16) * 100));
 
   return (
     <>

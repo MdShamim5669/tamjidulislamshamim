@@ -10,6 +10,13 @@ export default function Providers({ children }: { children: React.ReactNode }) {
   useEffect(() => {
     // Silently pre-warm the Render backend on page load so it never goes cold
     warmUpBackend();
+
+    // Keep backend alive every 9 minutes while visitor is on the site
+    const keepAliveTimer = setInterval(() => {
+      warmUpBackend();
+    }, 9 * 60 * 1000);
+
+    return () => clearInterval(keepAliveTimer);
   }, []);
 
   const [queryClient] = useState(
@@ -17,8 +24,11 @@ export default function Providers({ children }: { children: React.ReactNode }) {
       new QueryClient({
         defaultOptions: {
           queries: {
-            staleTime: 0, // Always fetch fresh live data from database
-            refetchOnWindowFocus: true,
+            staleTime: 1000 * 60 * 15, // Cache data in memory for 15 minutes (0ms page transitions!)
+            gcTime: 1000 * 60 * 60 * 24, // Keep in garbage collection for 24h
+            refetchOnWindowFocus: false, // Stop re-fetching backend on every tab switch
+            refetchOnMount: false, // Instant navigation using cached data
+            retry: 2,
           },
         },
       })
