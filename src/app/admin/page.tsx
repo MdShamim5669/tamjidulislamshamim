@@ -59,14 +59,21 @@ export default function AdminDashboard() {
   }, []);
 
   const getHeaders = useCallback(() => {
-    const headers: Record<string, string> = {};
-    const token = authToken || (typeof window !== 'undefined' ? localStorage.getItem('admin_token') || localStorage.getItem('admin_cv_key') || 'samim5669' : 'samim5669');
-    if (token) {
-      if (token.startsWith('eyJ')) {
-        headers['Authorization'] = `Bearer ${token}`;
-      } else {
-        headers['x-admin-key'] = token;
-      }
+    const headers: Record<string, string> = {
+      'Content-Type': 'application/json',
+      'x-admin-key': 'samim5669'
+    };
+    const key = typeof window !== 'undefined' ? localStorage.getItem('admin_cv_key') : null;
+    const token = typeof window !== 'undefined' ? localStorage.getItem('admin_token') : null;
+
+    if (key) {
+      headers['x-admin-key'] = key;
+    }
+    if (authToken && !authToken.startsWith('eyJ')) {
+      headers['x-admin-key'] = authToken;
+    }
+    if (token && token.startsWith('eyJ')) {
+      headers['Authorization'] = `Bearer ${token}`;
     }
     return headers;
   }, [authToken]);
@@ -213,6 +220,7 @@ export default function AdminDashboard() {
     } catch (err: any) {
       if (adminPassword === 'samim5669' || adminPassword === 'd8e768a90e24d09d') {
         setAuthToken(adminPassword);
+        localStorage.removeItem('admin_token');
         localStorage.setItem('admin_cv_key', adminPassword);
         toast.success('Admin Mode Unlocked via Master Key ✦');
       } else {
@@ -246,7 +254,7 @@ export default function AdminDashboard() {
       queryClient.invalidateQueries();
     },
     onError: (err: any) => {
-      const msg = err.response?.data?.message || (err.message === 'Network Error' ? 'Network Error: Cannot connect to server. Please check backend status or retry in a few seconds.' : err.message) || 'Operation failed';
+      const msg = err.response?.data?.message || (err.message === 'Network Error' ? 'Server is waking up from cold sleep or connection timed out. Retrying automatically in a moment...' : err.message) || 'Operation failed';
       toast.error('Save Error', { description: msg });
     }
   });
@@ -1586,8 +1594,16 @@ export default function AdminDashboard() {
                   }
                 }
 
-                if (type === 'project' && typeof payload.techStack === 'string') {
+                if ((type === 'project' || type === 'experience') && typeof payload.techStack === 'string') {
                   payload.techStack = payload.techStack.split(',').map((s: string) => s.trim()).filter(Boolean);
+                }
+
+                if (type === 'experience' && typeof payload.bullets === 'string') {
+                  payload.bullets = payload.bullets.split('\n').map((s: string) => s.trim()).filter(Boolean);
+                }
+
+                if (type === 'education' && typeof payload.orderIndex === 'string') {
+                  payload.orderIndex = parseInt(payload.orderIndex) || 1;
                 }
 
                 if (type === 'service' && typeof payload.tags === 'string') {

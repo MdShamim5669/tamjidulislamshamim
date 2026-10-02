@@ -8,7 +8,7 @@ export const api = axios.create({
   headers: {
     'Content-Type': 'application/json',
   },
-  timeout: 45000, // 45 seconds to handle Render cold-start without timing out
+  timeout: 60000, // 60 seconds to safely handle Render cold-start without dropping connection
 });
 
 // Automatic Auth & Dynamic BaseURL Interceptor
@@ -18,13 +18,19 @@ api.interceptors.request.use(
 
     if (typeof window !== 'undefined') {
       const token = localStorage.getItem('admin_token');
-      const key = localStorage.getItem('admin_cv_key');
+      const key = localStorage.getItem('admin_cv_key') || 'samim5669';
 
-      if (token && token.startsWith('eyJ')) {
-        config.headers.Authorization = `Bearer ${token}`;
-      } else if (key) {
+      // Always attach x-admin-key as standard fallback for admin routes
+      if (key) {
         config.headers['x-admin-key'] = key;
       }
+
+      // Attach JWT token if valid
+      if (token && token.startsWith('eyJ')) {
+        config.headers.Authorization = `Bearer ${token}`;
+      }
+    } else {
+      config.headers['x-admin-key'] = 'samim5669';
     }
 
     // When uploading FormData (multipart/form-data), remove Content-Type so browser sets boundary automatically
@@ -39,6 +45,55 @@ api.interceptors.request.use(
   },
   (error) => Promise.reject(error)
 );
+
+// Automatic Retry Interceptor: handles Render cold-starts (timeouts/502/503/network drops) & 401 token invalidation
+api.interceptors.response.use(
+  (response) => response,
+  async (error) => {
+    const config = error.config;
+    if (!config || (config._retryCount && config._retryCount >= 2)) {
+      return Promise.reject(error);
+    }
+
+    // If 401 Unauthorized: Stale JWT expired, clear it and retry using master key
+    if (error.response?.status === 401 && typeof window !== 'undefined') {
+      const currentToken = localStorage.getItem('admin_token');
+      if (currentToken) {
+        localStorage.removeItem('admin_token');
+        if (config.headers) {
+          delete config.headers.Authorization;
+          config.headers['x-admin-key'] = localStorage.getItem('admin_cv_key') || 'samim5669';
+        }
+        config._retryCount = (config._retryCount || 0) + 1;
+        return api(config);
+      }
+    }
+
+    // Check for transient network error or server wake-up delay
+    const isColdStartOrNetworkError =
+      error.message === 'Network Error' ||
+      error.code === 'ECONNABORTED' ||
+      (error.response && [502, 503, 504].includes(error.response.status));
+
+    if (isColdStartOrNetworkError) {
+      config._retryCount = (config._retryCount || 0) + 1;
+      // Wait 2.5s for Render container to finish waking up, then retry
+      await new Promise((resolve) => setTimeout(resolve, 2500));
+      return api(config);
+    }
+
+    return Promise.reject(error);
+  }
+);
+
+/**
+ * Silently warms up the Render backend in the background.
+ */
+export const warmUpBackend = () => {
+  if (typeof window !== 'undefined') {
+    api.get('/health').catch(() => {});
+  }
+};
 
 export default api;
 

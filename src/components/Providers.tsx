@@ -1,11 +1,17 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { Toaster } from 'sonner';
 import PageTransitionCurtain from './PageTransitionCurtain';
+import { warmUpBackend } from '../lib/api';
 
 export default function Providers({ children }: { children: React.ReactNode }) {
+  useEffect(() => {
+    // Silently pre-warm the Render backend on page load so it never goes cold
+    warmUpBackend();
+  }, []);
+
   const [queryClient] = useState(
     () =>
       new QueryClient({
